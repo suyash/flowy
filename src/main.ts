@@ -2,7 +2,7 @@ import "./main.scss";
 
 import "@webcomponents/custom-elements";
 
-import Task from "./task/task";
+import Task from "./components/task/task";
 
 window.addEventListener("DOMContentLoaded", main);
 

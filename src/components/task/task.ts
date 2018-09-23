@@ -2,7 +2,6 @@ import Checkbox from "../checkbox/checkbox";
 
 export default class Task extends HTMLElement {
     private subtasks: HTMLElement;
-
     private node: DocumentFragment;
 
     constructor(id: string, text: string = "") {
@@ -31,7 +30,9 @@ export default class Task extends HTMLElement {
     }
 
     public addSubtask(task: Task): void {
+        task.remove();
         this.subtasks.appendChild(task);
+
         this.setAttribute("has-subtasks", "true");
         this.setAttribute("expanded", "true");
     }
