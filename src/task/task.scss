@@ -1,0 +1,60 @@
+x-task {
+    color: #222;
+    font-size: 1rem;
+
+    header {
+        display: flex;
+        align-items: center;
+
+        x-checkbox {
+            margin-right: 0.5rem;
+        }
+
+        > a {
+            margin-right: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            font-size: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        span {
+            line-height: 2rem;
+        }
+
+        x-checkbox[checked] + span {
+            color: #aaa;
+        }
+    }
+
+    &[has-subtasks] {
+        > header {
+            > a:before {
+                content: "＋";
+            }
+        }
+
+        &[expanded] {
+            > header {
+                > a:before {
+                    content: "－";
+                }
+            }
+        }
+    }
+
+    &[expanded] {
+        footer {
+            height: 100%;
+        }
+    }
+
+    footer {
+        display: flex;
+        flex-direction: column;
+        margin-left: 2rem;
+        height: 0;
+        overflow: hidden;
+    }
+}
