@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2017",
+    "module": "es6",
+    "lib": [ "dom", "es7" ],
+    "removeComments": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    // "esModuleInterop": true,
+
+    /* Source Maps */
+    "sourceMap": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

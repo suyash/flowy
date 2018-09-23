@@ -1,0 +1,26 @@
+{
+  "name": "tf2",
+  "version": "0.1.0",
+  "author": "Suyash <suyash93@protonmail.com>",
+  "license": "BSD 3-Clause",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "dependencies": {
+    "@webcomponents/custom-elements": "^1.2.0",
+    "normalize.css": "^8.0.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.9.3",
+    "rollup": "^0.66.2",
+    "rollup-plugin-commonjs": "^9.1.8",
+    "rollup-plugin-copy": "^0.2.3",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-postcss": "^1.6.2",
+    "rollup-plugin-typescript2": "^0.17.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
+  },
+  "private": true
+}
