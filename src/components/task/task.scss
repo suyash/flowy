@@ -3,6 +3,53 @@ x-task {
     font-size: 1rem;
     min-width: 10rem;
     padding-top: 0.5rem;
+    display: none;
+
+    &[has-subtasks] {
+        > header {
+            > a:before {
+                content: "＋";
+            }
+        }
+
+        &[expanded] {
+            > header {
+                > a:before {
+                    content: "－";
+                }
+            }
+        }
+    }
+
+    &[expanded] {
+        footer {
+            height: 100%;
+        }
+    }
+
+    &[root] {
+        display: block;
+
+        > header {
+            a {
+                display: none;
+            }
+
+            x-checkbox {
+                display: none;
+            }
+
+            span {
+                font-size: 2rem;
+                line-height: 4rem;
+                text-align: center;
+            }
+        }
+
+        x-task {
+            display: block;
+        }
+    }
 
     header {
         display: flex;
@@ -34,28 +81,6 @@ x-task {
 
         x-checkbox[checked] + span {
             color: #aaa;
-        }
-    }
-
-    &[has-subtasks] {
-        > header {
-            > a:before {
-                content: "＋";
-            }
-        }
-
-        &[expanded] {
-            > header {
-                > a:before {
-                    content: "－";
-                }
-            }
-        }
-    }
-
-    &[expanded] {
-        footer {
-            height: 100%;
         }
     }
 
