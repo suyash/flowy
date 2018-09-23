@@ -5,6 +5,7 @@
   "license": "BSD 3-Clause",
   "scripts": {
     "build": "rollup -c",
+    "lint": "tslint -p . --fix",
     "watch": "rollup -c -w"
   },
   "dependencies": {
