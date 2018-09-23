@@ -19,9 +19,9 @@ export default class Task extends HTMLElement {
 
         if (text) {
             tasktext.innerHTML = text;
-        } else {
-            tasktext.setAttribute("contenteditable", "true");
         }
+
+        tasktext.setAttribute("contenteditable", "true");
 
         const header: HTMLElement = this.querySelector("header") as HTMLElement;
         header.appendChild(checkbox);

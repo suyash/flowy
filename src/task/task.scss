@@ -1,6 +1,8 @@
 x-task {
     color: #222;
     font-size: 1rem;
+    min-width: 10rem;
+    padding-top: 0.5rem;
 
     header {
         display: flex;
@@ -17,10 +19,17 @@ x-task {
             font-size: 1rem;
             text-decoration: none;
             color: inherit;
+            border: 0;
+            outline: 0;
         }
 
         span {
-            line-height: 2rem;
+            width: 100%;
+            border: 0;
+            outline: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.5rem;
         }
 
         x-checkbox[checked] + span {
