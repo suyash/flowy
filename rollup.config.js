@@ -17,7 +17,10 @@ export default {
     },
     plugins: [
         typescript({ tsconfig }),
-        resolve({ browser: true }),
+        resolve({
+            browser: true,
+            main: false,
+        }),
         commonjs(),
         postcss({
             extract: true,

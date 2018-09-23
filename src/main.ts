@@ -1,17 +1,36 @@
 import "./main.scss";
 
 import "@webcomponents/custom-elements";
+import { get } from "idb-keyval";
 
-import Task from "./components/task/task";
+import TaskElement from "./components/task/task";
+import store, { initialize } from "./store/idb";
+import { Task } from "./store/store";
 
 window.addEventListener("DOMContentLoaded", main);
 
-function main(): void {
-    const root: Task = new Task("asdasd", "asdasd");
+async function main(): Promise<void> {
+    const root: Task = await get("root", store) as Task;
 
-    root.addSubtask(new Task("gsdf", "adasd"));
-    root.addSubtask(new Task("agfdg", "easrawsrf"));
-    root.addSubtask(new Task("asde", "hxgffg"));
+    if (!root) {
+        await initialize();
+    }
 
-    (document.querySelector("main") as HTMLElement).appendChild(root);
+    const rootElement: TaskElement = await createElement("root");
+    (document.querySelector("main") as HTMLElement).appendChild(rootElement);
+}
+
+async function createElement(id: string): Promise<TaskElement> {
+    const task: Task = await get(id, store) as Task;
+    const element: TaskElement = new TaskElement(task.id, task.text);
+
+    const items: TaskElement[] = await Promise.all(
+        task.children.map((cid: string): Promise<TaskElement> => createElement(cid)),
+    );
+
+    for (const item of items) {
+        element.addSubtask(item);
+    }
+
+    return element;
 }
