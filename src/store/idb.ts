@@ -1,19 +1,19 @@
 import { set, Store } from "idb-keyval";
 
-import { Task } from "./store";
+import { Task } from "./interfaces";
 
 const store: Store = new Store("taskflowy", "tasks");
 
 export async function initialize(): Promise<Task> {
-    const root: Task = { id: "root", text: " ", children: [] };
+    const root: Task = { id: "root", text: " ", checked: false, children: [] };
     await set("root", root, store);
-    await save("first item", root);
+    await create("first item", root);
     return root;
 }
 
-export async function save(text: string, parent: Task): Promise<Task> {
+export async function create(text: string, parent: Task): Promise<Task> {
     const id: string = Math.random().toString().slice(2);
-    const task: Task = { id, text, children: [] };
+    const task: Task = { id, text, checked: false, children: [] };
 
     parent.children.push(id);
 

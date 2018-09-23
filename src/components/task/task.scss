@@ -22,7 +22,7 @@ x-task {
     }
 
     &[expanded] {
-        footer {
+        > footer {
             height: 100%;
         }
     }
