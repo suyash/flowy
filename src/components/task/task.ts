@@ -223,7 +223,7 @@ export default class Task extends HTMLElement {
 
         const parent: Task = this.parent();
         const grandParent: Task = parent.parent();
-        if (!grandParent) {
+        if (!grandParent || !(grandParent instanceof Task)) {
             return;
         }
 
