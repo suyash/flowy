@@ -2,7 +2,7 @@ export default class Checkbox extends HTMLElement {
     private node: DocumentFragment;
     private input: HTMLInputElement;
 
-    constructor(id: string) {
+    constructor(id: string, checked: boolean = false) {
         super();
 
         const template: HTMLTemplateElement = document.querySelector("#checkbox") as HTMLTemplateElement;
@@ -14,15 +14,26 @@ export default class Checkbox extends HTMLElement {
         this.input.id = `checkbox-${id}`;
         (this.querySelector("label") as HTMLLabelElement).setAttribute("for", `checkbox-${id}`);
 
+        this.input.checked = checked;
+        this.checked = checked;
+
         this.input.addEventListener("change", this.onChange);
     }
 
-    private onChange = (): void => {
-        if (this.input.checked) {
+    get checked(): boolean {
+        return this.hasAttribute("checked");
+    }
+
+    set checked(val: boolean) {
+        if (val) {
             this.setAttribute("checked", "true");
         } else {
             this.removeAttribute("checked");
         }
+    }
+
+    private onChange = (): void => {
+        this.checked = this.input.checked;
     }
 }
 

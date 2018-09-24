@@ -21,7 +21,7 @@ export default class Task extends HTMLElement {
 
         this.subtasks = this.querySelector("footer") as HTMLElement;
 
-        const checkbox: Checkbox = new Checkbox(task.id);
+        const checkbox: Checkbox = new Checkbox(task.id, task.checked);
         this.tasktext = document.createElement("span");
 
         if (task.text) {
@@ -37,6 +37,8 @@ export default class Task extends HTMLElement {
         (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.toggleExpanded);
         this.tasktext.addEventListener("keypress", this.onTextChange);
         this.tasktext.addEventListener("blur", this.onBlur);
+
+        checkbox.addEventListener("change", this.onStatusChange);
     }
 
     public addSubtask(task: Task): void {
@@ -170,6 +172,11 @@ export default class Task extends HTMLElement {
 
     private onBlur = async (): Promise<void> => {
         this.task.text = this.tasktext.innerHTML;
+        await set(this.task.id, this.task);
+    }
+
+    private onStatusChange = async (e: Event): Promise<void> => {
+        this.task.checked = (e.target as HTMLInputElement).checked;
         await set(this.task.id, this.task);
     }
 }
