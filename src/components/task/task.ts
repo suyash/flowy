@@ -43,12 +43,19 @@ export default class Task extends HTMLElement {
         task.remove();
         this.subtasks.appendChild(task);
 
-        this.setAttribute("has-subtasks", "true");
         this.setAttribute("expanded", "true");
+        this.setAttribute("has-subtasks", "true");
     }
 
     public freezeText(): void {
         this.tasktext.removeAttribute("contenteditable");
+    }
+
+    private addSubtaskBefore = (task: Task, nextSibling: Task): void => {
+        this.setAttribute("expanded", "true");
+
+        task.remove();
+        this.subtasks.insertBefore(task, nextSibling);
     }
 
     private toggleExpanded = (e: Event): void => {
@@ -144,12 +151,21 @@ export default class Task extends HTMLElement {
             return;
         }
 
-        parent.removeSubtask(this.task.id);
+        const nextSibling: Task = parent.nextSibling as Task;
 
-        grandParent.task.children.push(this.id);
-        await set(grandParent.task.id, grandParent.task);
+        if (!nextSibling) {
+            grandParent.task.children.push(this.id);
+            grandParent.addSubtask(this);
+        } else {
+            const idx: number = grandParent.task.children.indexOf(nextSibling.id);
+            grandParent.task.children.splice(idx, 0, this.id);
+            grandParent.addSubtaskBefore(this, nextSibling);
+        }
 
-        grandParent.addSubtask(this);
+        await Promise.all([
+            parent.removeSubtask(this.task.id),
+            set(grandParent.task.id, grandParent.task),
+        ]);
     }
 
     private onBlur = async (): Promise<void> => {
