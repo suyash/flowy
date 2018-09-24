@@ -139,6 +139,8 @@ export default class Task extends HTMLElement {
             return;
         }
 
+        const pos: number = this.getCursorPosition();
+
         const parent: Task = this.parent();
         parent.removeSubtask(this.task.id);
 
@@ -146,6 +148,8 @@ export default class Task extends HTMLElement {
         await set(prevSibling.task.id, prevSibling.task);
 
         prevSibling.addSubtask(this);
+        this.tasktext.focus();
+        this.setCursorPosition(pos);
     }
 
     private unshift = async (): Promise<void> => {
@@ -158,6 +162,8 @@ export default class Task extends HTMLElement {
         if (!grandParent) {
             return;
         }
+
+        const pos: number = this.getCursorPosition();
 
         const nextSibling: Task = parent.nextSibling as Task;
 
@@ -174,6 +180,9 @@ export default class Task extends HTMLElement {
             parent.removeSubtask(this.task.id),
             set(grandParent.task.id, grandParent.task),
         ]);
+
+        this.tasktext.focus();
+        this.setCursorPosition(pos);
     }
 
     private updateText = async (): Promise<void> => {
@@ -194,6 +203,33 @@ export default class Task extends HTMLElement {
     private onStatusChange = async (e: Event): Promise<void> => {
         this.task.checked = (e.target as HTMLInputElement).checked;
         await set(this.task.id, this.task);
+    }
+
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/Selection
+     * https://developer.mozilla.org/en-US/docs/Web/API/range
+     */
+
+    private getCursorPosition = (): number => {
+        const selection: Selection = window.getSelection();
+        if (selection.rangeCount) {
+            const range: Range = selection.getRangeAt(0);
+            if (range.commonAncestorContainer.parentNode === this.tasktext) {
+                return range.endOffset;
+            }
+        }
+
+        return 0;
+    }
+
+    private setCursorPosition = (pos: number): void => {
+        const range: Range = document.createRange();
+        range.setStart(this.tasktext.childNodes[0], pos);
+        range.collapse(true);
+
+        const sel: Selection = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
     }
 }
 
