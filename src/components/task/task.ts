@@ -1,5 +1,5 @@
 import { Task as TaskTemplate } from "../../store/interfaces";
-import { create, set } from "../../store/store";
+import { create, remove, set } from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
 
 export default class Task extends HTMLElement {
@@ -172,7 +172,17 @@ export default class Task extends HTMLElement {
 
     private onBlur = async (): Promise<void> => {
         this.task.text = this.tasktext.innerHTML;
-        await set(this.task.id, this.task);
+        if (this.task.text) {
+            await set(this.task.id, this.task);
+        } else {
+            const parent: Task = this.parent();
+            this.remove();
+
+            await Promise.all([
+                parent.removeSubtask(this.id),
+                remove(this.id),
+            ]);
+        }
     }
 
     private onStatusChange = async (e: Event): Promise<void> => {
