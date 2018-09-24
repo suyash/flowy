@@ -47,6 +47,10 @@ export default class Task extends HTMLElement {
         this.setAttribute("expanded", "true");
     }
 
+    public freezeText(): void {
+        this.tasktext.removeAttribute("contenteditable");
+    }
+
     private toggleExpanded = (e: Event): void => {
         e.preventDefault();
         if (this.hasAttribute("expanded")) {
@@ -61,6 +65,16 @@ export default class Task extends HTMLElement {
         if (e.keyCode === 13 || e.keyCode === 9) {
             e.preventDefault();
 
+            if (e.shiftKey) {
+                switch (e.keyCode) {
+                case 9:
+                    this.unshift();
+                    break;
+                }
+
+                return;
+            }
+
             switch (e.keyCode) {
             case 13:
                 this.addSibling();
@@ -72,8 +86,26 @@ export default class Task extends HTMLElement {
         }
     }
 
+    private parent = (): Task => {
+        return (this.parentElement as HTMLElement).parentElement as Task;
+    }
+
+    private removeSubtask = async (id: string): Promise<void> => {
+        this.task.children = this.task.children.filter((cid: string): boolean => cid !== id);
+        if (this.task.children.length === 0) {
+            this.removeAttribute("has-subtasks");
+            this.removeAttribute("expanded");
+        }
+
+        await set(this.task.id, this.task);
+    }
+
     private addSibling = async (): Promise<void> => {
-        const parent: Task = (this.parentElement as Task).parentElement as Task;
+        if (this.hasAttribute("root")) {
+            return;
+        }
+
+        const parent: Task = this.parent();
 
         const newTask: TaskTemplate = await create("", parent.task);
         const newTaskElement: Task = new Task(newTask);
@@ -83,19 +115,41 @@ export default class Task extends HTMLElement {
     }
 
     private shift = async (): Promise<void> => {
+        if (this.hasAttribute("root")) {
+            return;
+        }
+
         const prevSibling: Task = this.previousSibling as Task;
         if (!prevSibling) {
             return;
         }
 
-        const parent: Task = (this.parentElement as Task).parentElement as Task;
-        parent.task.children = parent.task.children.filter((id: string): boolean => id !== this.task.id);
-        await set(parent.task.id, parent.task);
+        const parent: Task = this.parent();
+        parent.removeSubtask(this.task.id);
 
         prevSibling.task.children.push(this.task.id);
         await set(prevSibling.task.id, prevSibling.task);
 
         prevSibling.addSubtask(this);
+    }
+
+    private unshift = async (): Promise<void> => {
+        if (this.hasAttribute("root")) {
+            return;
+        }
+
+        const parent: Task = this.parent();
+        const grandParent: Task = parent.parent();
+        if (!grandParent) {
+            return;
+        }
+
+        parent.removeSubtask(this.task.id);
+
+        grandParent.task.children.push(this.id);
+        await set(grandParent.task.id, grandParent.task);
+
+        grandParent.addSubtask(this);
     }
 
     private onBlur = async (): Promise<void> => {
