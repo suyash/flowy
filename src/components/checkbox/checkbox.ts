@@ -14,7 +14,6 @@ export default class Checkbox extends HTMLElement {
         this.input.id = `checkbox-${id}`;
         (this.querySelector("label") as HTMLLabelElement).setAttribute("for", `checkbox-${id}`);
 
-        this.input.checked = checked;
         this.checked = checked;
 
         this.input.addEventListener("change", this.onChange);
@@ -30,10 +29,16 @@ export default class Checkbox extends HTMLElement {
         } else {
             this.removeAttribute("checked");
         }
+
+        this.input.checked = val;
     }
 
     private onChange = (): void => {
-        this.checked = this.input.checked;
+        if (this.input.checked) {
+            this.setAttribute("checked", "true");
+        } else {
+            this.removeAttribute("checked");
+        }
     }
 }
 

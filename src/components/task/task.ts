@@ -4,6 +4,7 @@ import Checkbox from "../checkbox/checkbox";
 
 export default class Task extends HTMLElement {
     private task: TaskTemplate;
+    private checkbox: Checkbox;
     private tasktext: HTMLSpanElement;
     private subtasks: HTMLElement;
     private node: DocumentFragment;
@@ -21,7 +22,7 @@ export default class Task extends HTMLElement {
 
         this.subtasks = this.querySelector("footer") as HTMLElement;
 
-        const checkbox: Checkbox = new Checkbox(task.id, task.checked);
+        this.checkbox = new Checkbox(task.id, task.checked);
         this.tasktext = document.createElement("span");
 
         if (task.text) {
@@ -31,14 +32,14 @@ export default class Task extends HTMLElement {
         this.tasktext.setAttribute("contenteditable", "true");
 
         const header: HTMLElement = this.querySelector("header") as HTMLElement;
-        header.appendChild(checkbox);
+        header.appendChild(this.checkbox);
         header.appendChild(this.tasktext);
 
         (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.toggleExpanded);
-        this.tasktext.addEventListener("keypress", this.onTextChange);
+        this.tasktext.addEventListener("keypress", this.onKeyPress);
         this.tasktext.addEventListener("blur", this.updateText);
 
-        checkbox.addEventListener("change", this.onStatusChange);
+        this.checkbox.addEventListener("change", this.onStatusChange);
     }
 
     public addSubtask(task: Task): void {
@@ -69,9 +70,12 @@ export default class Task extends HTMLElement {
         }
     }
 
-    private onTextChange = (e: KeyboardEvent): void => {
-        /* 13 => enter, 9 => tab */
-        if (e.keyCode === 13 || e.keyCode === 9) {
+    private onKeyPress = (e: KeyboardEvent): void => {
+        // 8 => Backspace
+        // 9 => tab
+        // 13 => enter
+
+        if (e.keyCode === 13 || e.keyCode === 9 || e.keyCode === 8) {
             e.preventDefault();
 
             if (e.shiftKey) {
@@ -81,6 +85,18 @@ export default class Task extends HTMLElement {
                     break;
                 }
 
+                return;
+            }
+
+            if (e.ctrlKey) {
+                switch (e.keyCode) {
+                case 13:
+                    this.toggleStatus();
+                    break;
+                case 8:
+                    this.drop();
+                    break;
+                }
                 return;
             }
 
@@ -107,6 +123,16 @@ export default class Task extends HTMLElement {
         }
 
         await set(this.task.id, this.task);
+    }
+
+    private drop = async (): Promise<void> => {
+        const parent: Task = this.parent();
+        this.remove();
+
+        await Promise.all([
+            parent.removeSubtask(this.id),
+            remove(this.id),
+        ]);
     }
 
     private addSibling = async (): Promise<void> => {
@@ -190,18 +216,21 @@ export default class Task extends HTMLElement {
         if (this.task.text) {
             await set(this.task.id, this.task);
         } else {
-            const parent: Task = this.parent();
-            this.remove();
-
-            await Promise.all([
-                parent.removeSubtask(this.id),
-                remove(this.id),
-            ]);
+            await this.drop();
         }
     }
 
     private onStatusChange = async (e: Event): Promise<void> => {
-        this.task.checked = (e.target as HTMLInputElement).checked;
+        await this.setStatus((e.target as HTMLInputElement).checked);
+    }
+
+    private toggleStatus = async (): Promise<void> => {
+        this.checkbox.checked = !this.checkbox.checked;
+        await this.setStatus(this.checkbox.checked);
+    }
+
+    private setStatus = async (status: boolean): Promise<void> => {
+        this.task.checked = status;
         await set(this.task.id, this.task);
     }
 
