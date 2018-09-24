@@ -318,6 +318,10 @@ export default class Task extends HTMLElement {
     }
 
     private setCursorPosition = (pos: number): void => {
+        if (!this.tasktext.childNodes || !this.tasktext.childNodes.length) {
+            return;
+        }
+
         const range: Range = document.createRange();
         range.setStart(this.tasktext.childNodes[0], pos);
         range.collapse(true);
