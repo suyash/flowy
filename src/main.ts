@@ -17,7 +17,7 @@ async function main(): Promise<void> {
     }
 
     const rootElement: TaskElement = await createElement("root");
-    rootElement.setAttribute("root", "true");
+    rootElement.root = true;
     rootElement.freezeText();
     (document.querySelector("main") as HTMLElement).appendChild(rootElement);
 }

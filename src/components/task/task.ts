@@ -42,12 +42,48 @@ export default class Task extends HTMLElement {
         this.checkbox.addEventListener("change", this.onStatusChange);
     }
 
+    get expanded(): boolean {
+        return this.hasAttribute("expanded");
+    }
+
+    set expanded(val: boolean) {
+        if (val) {
+            this.setAttribute("expanded", "true");
+        } else {
+            this.removeAttribute("expanded");
+        }
+    }
+
+    get hasSubtasks(): boolean {
+        return this.hasAttribute("has-subtasks");
+    }
+
+    set hasSubtasks(val: boolean) {
+        if (val) {
+            this.setAttribute("has-subtasks", "true");
+        } else {
+            this.removeAttribute("has-subtasks");
+        }
+    }
+
+    get root(): boolean {
+        return this.hasAttribute("root");
+    }
+
+    set root(val: boolean) {
+        if (val) {
+            this.setAttribute("root", "true");
+        } else {
+            this.removeAttribute("root");
+        }
+    }
+
     public addSubtask(task: Task): void {
         task.remove();
         this.subtasks.appendChild(task);
 
-        this.setAttribute("expanded", "true");
-        this.setAttribute("has-subtasks", "true");
+        this.expanded = true;
+        this.hasSubtasks = true;
     }
 
     public freezeText(): void {
@@ -55,7 +91,7 @@ export default class Task extends HTMLElement {
     }
 
     private addSubtaskBefore = (task: Task, nextSibling: Task): void => {
-        this.setAttribute("expanded", "true");
+        this.expanded = true;
 
         task.remove();
         this.subtasks.insertBefore(task, nextSibling);
@@ -63,51 +99,53 @@ export default class Task extends HTMLElement {
 
     private toggleExpanded = (e: Event): void => {
         e.preventDefault();
-        if (this.hasAttribute("expanded")) {
-            this.removeAttribute("expanded");
-        } else {
-            this.setAttribute("expanded", "true");
-        }
+        this.expanded = !this.expanded;
     }
 
     private onKeyPress = (e: KeyboardEvent): void => {
-        // 8 => Backspace
-        // 9 => tab
-        // 13 => enter
-
-        if (e.keyCode === 13 || e.keyCode === 9 || e.keyCode === 8) {
-            e.preventDefault();
-
-            if (e.shiftKey) {
-                switch (e.keyCode) {
-                case 9:
-                    this.unshift();
-                    break;
-                }
-
-                return;
-            }
-
-            if (e.ctrlKey) {
-                switch (e.keyCode) {
-                case 13:
-                    this.toggleStatus();
-                    break;
-                case 8:
-                    this.drop();
-                    break;
-                }
-                return;
-            }
-
+        if (e.shiftKey) {
             switch (e.keyCode) {
-            case 13:
-                this.addSibling();
-                break;
-            case 9:
-                this.shift();
+            case 9: // tab
+                e.preventDefault();
+                this.unshift();
                 break;
             }
+
+            return;
+        }
+
+        if (e.ctrlKey) {
+            switch (e.keyCode) {
+            case 8: // backspace
+                e.preventDefault();
+                this.drop();
+                break;
+            case 13: // enter
+                e.preventDefault();
+                this.toggleStatus();
+                break;
+            }
+
+            return;
+        }
+
+        switch (e.keyCode) {
+        case 9: // tab
+            e.preventDefault();
+            this.shift();
+            break;
+        case 13: // enter
+            e.preventDefault();
+            this.addSibling();
+            break;
+        case 38: // ArrowUp
+            e.preventDefault();
+            this.moveFocusUp();
+            break;
+        case 40: // ArrowDown
+            e.preventDefault();
+            this.moveFocusDown();
+            break;
         }
     }
 
@@ -118,8 +156,8 @@ export default class Task extends HTMLElement {
     private removeSubtask = async (id: string): Promise<void> => {
         this.task.children = this.task.children.filter((cid: string): boolean => cid !== id);
         if (this.task.children.length === 0) {
-            this.removeAttribute("has-subtasks");
-            this.removeAttribute("expanded");
+            this.hasSubtasks = false;
+            this.expanded = false;
         }
 
         await set(this.task.id, this.task);
@@ -232,6 +270,34 @@ export default class Task extends HTMLElement {
     private setStatus = async (status: boolean): Promise<void> => {
         this.task.checked = status;
         await set(this.task.id, this.task);
+    }
+
+    private moveFocusUp = async (): Promise<void> => {
+        const element: Task = this.previousSibling as Task;
+        if (element) {
+            this.moveFocus(element);
+            return;
+        }
+
+        const parent: Task = this.parent();
+        if (!parent.root) {
+            this.moveFocus(parent);
+        }
+    }
+
+    private moveFocusDown = async (): Promise<void> => {
+        const element: Task = this.nextSibling as Task;
+        if (element) {
+            this.moveFocus(element);
+        }
+    }
+
+    private moveFocus = (task: Task): void => {
+        const pos: number = this.getCursorPosition();
+        this.tasktext.blur();
+
+        task.tasktext.focus();
+        task.setCursorPosition(pos);
     }
 
     /**
