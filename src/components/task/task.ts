@@ -36,7 +36,7 @@ export default class Task extends HTMLElement {
 
         (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.toggleExpanded);
         this.tasktext.addEventListener("keypress", this.onTextChange);
-        this.tasktext.addEventListener("blur", this.onBlur);
+        this.tasktext.addEventListener("blur", this.updateText);
 
         checkbox.addEventListener("change", this.onStatusChange);
     }
@@ -118,7 +118,13 @@ export default class Task extends HTMLElement {
 
         const newTask: TaskTemplate = await create("", parent.task);
         const newTaskElement: Task = new Task(newTask);
-        parent.addSubtask(newTaskElement);
+
+        const nextSibling: Task|null = this.nextSibling as Task|null;
+        if (!nextSibling) {
+            parent.addSubtask(newTaskElement);
+        } else {
+            parent.addSubtaskBefore(newTaskElement, nextSibling);
+        }
 
         (newTaskElement.querySelector("span") as HTMLElement).focus();
     }
@@ -128,7 +134,7 @@ export default class Task extends HTMLElement {
             return;
         }
 
-        const prevSibling: Task = this.previousSibling as Task;
+        const prevSibling: Task|null = this.previousSibling as Task|null;
         if (!prevSibling) {
             return;
         }
@@ -170,7 +176,7 @@ export default class Task extends HTMLElement {
         ]);
     }
 
-    private onBlur = async (): Promise<void> => {
+    private updateText = async (): Promise<void> => {
         this.task.text = this.tasktext.innerHTML;
         if (this.task.text) {
             await set(this.task.id, this.task);
