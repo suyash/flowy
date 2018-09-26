@@ -1,44 +1,62 @@
-import { set, Store } from "idb-keyval";
+import { del, get, set, Store } from "idb-keyval";
 
-import { Task, uuid } from "./interfaces";
+import { Task, TaskStore, uuid } from "./interfaces";
 
-const tasksStore: Store = new Store("taskflowy", "tasks");
-
-export async function initialize(): Promise<Task> {
-    const root: Task = { id: "root", text: " ", checked: false, children: [] };
-    await set("root", root, tasksStore);
-    await create("first item", root);
-    return root;
+interface IDBTaskStore extends TaskStore {
+    store: Store;
 }
 
-export async function create(text: string, parent: Task): Promise<Task> {
-    const id: string = uuid();
-    const task: Task = { id, text, checked: false, children: [] };
+const taskStore: IDBTaskStore = {
+    store: new Store("taskflowy", "tasks"),
 
-    parent.children.push(id);
+    task(id: string): Promise<Task> {
+        return get(id, this.store) as Promise<Task>;
+    },
 
-    await Promise.all([
-        set(parent.id, parent, tasksStore),
-        set(id, task, tasksStore),
-    ]);
+    async create(parent: Task, text: string = ""): Promise<Task> {
+        const id: string = uuid();
+        const task: Task = { id, text, checked: false, children: [] };
 
-    return task;
-}
+        parent.children.push(id);
 
-export async function createBefore(text: string, sibling: Task, parent: Task): Promise<Task> {
-    const id: string = uuid();
-    const task: Task = { id, text, checked: false, children: [] };
+        await Promise.all([
+            set(parent.id, parent, this.store),
+            set(id, task, this.store),
+        ]);
 
-    const index: number = parent.children.indexOf(sibling.id);
+        return task;
+    },
 
-    parent.children.splice(index, 0, id);
+    async createBefore(parent: Task, nextSibling: Task, text: string = ""): Promise<Task> {
+        const id: string = uuid();
+        const task: Task = { id, text, checked: false, children: [] };
 
-    await Promise.all([
-        set(parent.id, parent, tasksStore),
-        set(id, task, tasksStore),
-    ]);
+        const index: number = parent.children.indexOf(nextSibling.id);
 
-    return task;
-}
+        parent.children.splice(index, 0, id);
 
-export default tasksStore;
+        await Promise.all([
+            set(parent.id, parent, this.store),
+            set(id, task, this.store),
+        ]);
+
+        return task;
+    },
+
+    update(task: Task): Promise<void> {
+        return set(task.id, task, this.store);
+    },
+
+    remove(task: Task): Promise<void> {
+        return del(task.id);
+    },
+
+    async initialize(): Promise<Task> {
+        const root: Task = { id: "root", text: " ", checked: false, children: [] };
+        await set("root", root, this.store);
+        await this.create(root, "first item");
+        return root;
+    },
+};
+
+export default taskStore;

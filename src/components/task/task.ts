@@ -1,5 +1,5 @@
 import { Task as TaskTemplate } from "../../store/interfaces";
-import { create, createBefore, remove, set } from "../../store/store";
+import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
 
 export default class Task extends HTMLElement {
@@ -168,7 +168,7 @@ export default class Task extends HTMLElement {
             this.expanded = false;
         }
 
-        await set(this.task.id, this.task);
+        await store.update(this.task);
     }
 
     private drop = async (): Promise<void> => {
@@ -177,7 +177,7 @@ export default class Task extends HTMLElement {
 
         await Promise.all([
             parent.removeSubtask(this.id),
-            remove(this.id),
+            store.remove(this.task),
         ]);
     }
 
@@ -191,12 +191,12 @@ export default class Task extends HTMLElement {
         const nextSibling: Task|null = this.nextSibling as Task|null;
 
         if (!nextSibling) {
-            const newTask: TaskTemplate = await create("", parent.task);
+            const newTask: TaskTemplate = await store.create(parent.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtask(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         } else {
-            const newTask: TaskTemplate = await createBefore("", nextSibling.task, parent.task);
+            const newTask: TaskTemplate = await store.createBefore(parent.task, nextSibling.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtaskBefore(newTaskElement, nextSibling);
             (newTaskElement.tasktext as HTMLElement).focus();
@@ -219,7 +219,7 @@ export default class Task extends HTMLElement {
         parent.removeSubtask(this.task.id);
 
         prevSibling.task.children.push(this.task.id);
-        await set(prevSibling.task.id, prevSibling.task);
+        await store.update(prevSibling.task);
 
         prevSibling.addSubtask(this);
         this.tasktext.focus();
@@ -252,7 +252,7 @@ export default class Task extends HTMLElement {
 
         await Promise.all([
             parent.removeSubtask(this.task.id),
-            set(grandParent.task.id, grandParent.task),
+            store.update(grandParent.task),
         ]);
 
         this.tasktext.focus();
@@ -262,7 +262,7 @@ export default class Task extends HTMLElement {
     private updateText = async (): Promise<void> => {
         this.task.text = this.tasktext.innerHTML;
         if (this.task.text) {
-            await set(this.task.id, this.task);
+            await store.update(this.task);
         } else {
             await this.drop();
         }
@@ -279,7 +279,7 @@ export default class Task extends HTMLElement {
 
     private setStatus = async (status: boolean): Promise<void> => {
         this.task.checked = status;
-        await set(this.task.id, this.task);
+        await store.update(this.task);
     }
 
     private moveFocusUp = async (): Promise<void> => {
