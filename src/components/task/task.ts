@@ -124,6 +124,14 @@ export default class Task extends HTMLElement {
                 e.preventDefault();
                 this.toggleStatus();
                 break;
+            case 38: // ArrowUp
+                e.preventDefault();
+                this.expanded = false;
+                break;
+            case 40: // ArrowDown
+                e.preventDefault();
+                this.expanded = true;
+                break;
             }
 
             return;
