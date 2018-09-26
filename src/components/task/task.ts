@@ -1,5 +1,5 @@
 import { Task as TaskTemplate } from "../../store/interfaces";
-import { create, remove, set } from "../../store/store";
+import { create, createBefore, remove, set } from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
 
 export default class Task extends HTMLElement {
@@ -180,17 +180,19 @@ export default class Task extends HTMLElement {
 
         const parent: Task = this.parent();
 
-        const newTask: TaskTemplate = await create("", parent.task);
-        const newTaskElement: Task = new Task(newTask);
-
         const nextSibling: Task|null = this.nextSibling as Task|null;
-        if (!nextSibling) {
-            parent.addSubtask(newTaskElement);
-        } else {
-            parent.addSubtaskBefore(newTaskElement, nextSibling);
-        }
 
-        (newTaskElement.querySelector("span") as HTMLElement).focus();
+        if (!nextSibling) {
+            const newTask: TaskTemplate = await create("", parent.task);
+            const newTaskElement: Task = new Task(newTask);
+            parent.addSubtask(newTaskElement);
+            (newTaskElement.tasktext as HTMLElement).focus();
+        } else {
+            const newTask: TaskTemplate = await createBefore("", nextSibling.task, parent.task);
+            const newTaskElement: Task = new Task(newTask);
+            parent.addSubtaskBefore(newTaskElement, nextSibling);
+            (newTaskElement.tasktext as HTMLElement).focus();
+        }
     }
 
     private shift = async (): Promise<void> => {
