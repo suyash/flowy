@@ -1,3 +1,4 @@
+import { allowRooting } from "../../root";
 import { Task as TaskTemplate } from "../../store/interfaces";
 import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
@@ -78,6 +79,22 @@ export default class Task extends HTMLElement {
         }
     }
 
+    get ancestor(): boolean {
+        return this.hasAttribute("ancestor");
+    }
+
+    set ancestor(val: boolean) {
+        if (val) {
+            this.setAttribute("ancestor", "true");
+        } else {
+            this.removeAttribute("ancestor");
+        }
+    }
+
+    get textElement(): HTMLSpanElement {
+        return this.tasktext;
+    }
+
     public addSubtask(task: Task): void {
         task.remove();
         this.subtasks.appendChild(task);
@@ -88,6 +105,15 @@ export default class Task extends HTMLElement {
 
     public freezeText(): void {
         this.tasktext.removeAttribute("contenteditable");
+    }
+
+    public parent(): Task|null {
+        const candidate: HTMLElement | null = (this.parentElement as HTMLElement).parentElement;
+        if (candidate instanceof Task) {
+            return candidate;
+        }
+
+        return null;
     }
 
     private addSubtaskBefore = (task: Task, nextSibling: Task): void => {
@@ -157,10 +183,6 @@ export default class Task extends HTMLElement {
         }
     }
 
-    private parent = (): Task => {
-        return (this.parentElement as HTMLElement).parentElement as Task;
-    }
-
     private removeSubtask = async (id: string): Promise<void> => {
         this.task.children = this.task.children.filter((cid: string): boolean => cid !== id);
         if (this.task.children.length === 0) {
@@ -172,7 +194,7 @@ export default class Task extends HTMLElement {
     }
 
     private drop = async (): Promise<void> => {
-        const parent: Task = this.parent();
+        const parent: Task = this.parent() as Task;
         this.remove();
 
         await Promise.all([
@@ -186,7 +208,7 @@ export default class Task extends HTMLElement {
             return;
         }
 
-        const parent: Task = this.parent();
+        const parent: Task = this.parent() as Task;
 
         const nextSibling: Task|null = this.nextSibling as Task|null;
 
@@ -194,11 +216,13 @@ export default class Task extends HTMLElement {
             const newTask: TaskTemplate = await store.create(parent.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtask(newTaskElement);
+            allowRooting(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         } else {
             const newTask: TaskTemplate = await store.createBefore(parent.task, nextSibling.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtaskBefore(newTaskElement, nextSibling);
+            allowRooting(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         }
     }
@@ -215,7 +239,7 @@ export default class Task extends HTMLElement {
 
         const pos: number = this.getCursorPosition();
 
-        const parent: Task = this.parent();
+        const parent: Task = this.parent() as Task;
         parent.removeSubtask(this.task.id);
 
         prevSibling.task.children.push(this.task.id);
@@ -231,8 +255,8 @@ export default class Task extends HTMLElement {
             return;
         }
 
-        const parent: Task = this.parent();
-        const grandParent: Task = parent.parent();
+        const parent: Task = this.parent() as Task;
+        const grandParent: Task = parent.parent() as Task;
         if (!grandParent || !(grandParent instanceof Task)) {
             return;
         }
@@ -289,7 +313,7 @@ export default class Task extends HTMLElement {
             return;
         }
 
-        const parent: Task = this.parent();
+        const parent: Task = this.parent() as Task;
         if (!parent.root) {
             this.moveFocus(parent);
         }
