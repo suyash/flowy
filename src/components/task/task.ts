@@ -27,7 +27,7 @@ export default class Task extends HTMLElement {
         this.tasktext = document.createElement("span");
 
         if (task.text) {
-            this.tasktext.innerHTML = task.text;
+            this.tasktext.innerText = task.text;
         }
 
         this.tasktext.setAttribute("contenteditable", "true");
@@ -284,7 +284,7 @@ export default class Task extends HTMLElement {
     }
 
     private updateText = async (): Promise<void> => {
-        this.task.text = this.tasktext.innerHTML;
+        this.task.text = this.tasktext.innerText;
         if (this.task.text) {
             await store.update(this.task);
         } else {
