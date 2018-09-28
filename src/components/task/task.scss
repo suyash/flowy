@@ -21,6 +21,16 @@ x-task {
             color: inherit;
             border: 0;
             outline: 0;
+            opacity: 0.2;
+            transition: all ease-in-out 0.05s;
+
+            &:before {
+                content: "📌";
+            }
+
+            &:hover {
+                opacity: 1;
+            }
         }
 
         span {
@@ -54,10 +64,31 @@ x-task {
         display: none;
     }
 
+    &[is-pinned] {
+        > header {
+            > a {
+                opacity: 1;
+            }
+        }
+    }
+
+    &[checked] {
+        > header {
+            > a {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+    }
+
     &[has-subtasks] {
         > header {
-            > a:before {
-                content: "＋";
+            > a {
+                opacity: 1;
+
+                &:before {
+                    content: "＋";
+                }
             }
         }
 

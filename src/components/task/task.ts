@@ -23,9 +23,10 @@ export default class Task extends HTMLElement {
 
         this.subtasks = this.querySelector("footer") as HTMLElement;
 
-        this.checkbox = new Checkbox(task.id, task.checked);
-        this.tasktext = document.createElement("span");
+        this.checkbox = new Checkbox(task.id);
+        this.checked = task.checked;
 
+        this.tasktext = document.createElement("span");
         if (task.text) {
             this.tasktext.innerText = task.text;
         }
@@ -36,7 +37,7 @@ export default class Task extends HTMLElement {
         header.appendChild(this.checkbox);
         header.appendChild(this.tasktext);
 
-        (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.toggleExpanded);
+        (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.onLinkClick);
         this.tasktext.addEventListener("keypress", this.onKeyPress);
         this.tasktext.addEventListener("blur", this.updateText);
 
@@ -91,6 +92,32 @@ export default class Task extends HTMLElement {
         }
     }
 
+    get isPinned(): boolean {
+        return this.hasAttribute("is-pinned");
+    }
+
+    set isPinned(val: boolean) {
+        if (val) {
+            this.setAttribute("is-pinned", "true");
+        } else {
+            this.removeAttribute("is-pinned");
+        }
+    }
+
+    get checked(): boolean {
+        return this.hasAttribute("checked");
+    }
+
+    set checked(val: boolean) {
+        if (val) {
+            this.setAttribute("checked", "true");
+        } else {
+            this.removeAttribute("checked");
+        }
+
+        this.checkbox.checked = val;
+    }
+
     get textElement(): HTMLSpanElement {
         return this.tasktext;
     }
@@ -123,9 +150,17 @@ export default class Task extends HTMLElement {
         this.subtasks.insertBefore(task, nextSibling);
     }
 
-    private toggleExpanded = (e: Event): void => {
+    private onLinkClick = (e: Event): void => {
         e.preventDefault();
-        this.expanded = !this.expanded;
+        if (this.hasSubtasks) {
+            this.expanded = !this.expanded;
+        } else {
+            this.pin();
+        }
+    }
+
+    private pin = (): void => {
+        this.isPinned = !this.isPinned;
     }
 
     private onKeyPress = (e: KeyboardEvent): void => {
@@ -293,12 +328,13 @@ export default class Task extends HTMLElement {
     }
 
     private onStatusChange = async (e: Event): Promise<void> => {
-        await this.setStatus((e.target as HTMLInputElement).checked);
+        this.checked = (e.target as HTMLInputElement).checked;
+        await this.setStatus(this.checked);
     }
 
     private toggleStatus = async (): Promise<void> => {
-        this.checkbox.checked = !this.checkbox.checked;
-        await this.setStatus(this.checkbox.checked);
+        this.checked = !this.checked;
+        await this.setStatus(this.checked);
     }
 
     private setStatus = async (status: boolean): Promise<void> => {
