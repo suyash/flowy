@@ -130,6 +130,7 @@ x-task {
 
         > footer {
             display: flex;
+            margin-left: 0;
 
             header {
                 display: flex;
@@ -148,6 +149,7 @@ x-task {
     &[ancestor] {
         > footer {
             display: flex;
+            margin-left: 0;
         }
     }
 }
