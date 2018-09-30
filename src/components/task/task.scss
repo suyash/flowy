@@ -26,6 +26,7 @@ x-task {
 
             &:before {
                 content: "📌";
+                font-size: 0.9rem;
             }
 
             &:hover {
@@ -88,6 +89,7 @@ x-task {
 
                 &:before {
                     content: "＋";
+                    font-size: 1rem;
                 }
             }
         }
@@ -96,6 +98,7 @@ x-task {
             > header {
                 > a:before {
                     content: "－";
+                    font-size: 1rem;
                 }
             }
         }
