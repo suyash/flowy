@@ -2,6 +2,7 @@ export interface Task {
     id: string;
     text: string;
     checked: boolean;
+    pinned: boolean;
     children: string[];
 }
 
