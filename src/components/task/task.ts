@@ -150,6 +150,19 @@ export default class Task extends HTMLElement {
         this.subtasks.insertBefore(task, nextSibling);
     }
 
+    private addSubtaskAfter = (task: Task, prevSibling: Task): void => {
+        this.expanded = true;
+
+        task.remove();
+
+        const next: Task|null = prevSibling.nextSibling as Task|null;
+        if (next) {
+            this.subtasks.insertBefore(task, next);
+        } else {
+            this.subtasks.appendChild(task);
+        }
+    }
+
     private onLinkClick = (e: Event): void => {
         e.preventDefault();
         if (this.hasSubtasks) {
@@ -169,6 +182,14 @@ export default class Task extends HTMLElement {
             case 9: // tab
                 e.preventDefault();
                 this.unshift();
+                break;
+            case 38: // ArrowUp
+                e.preventDefault();
+                this.moveUp();
+                break;
+            case 40: // ArrowDown
+                e.preventDefault();
+                this.moveDown();
                 break;
             }
 
@@ -342,8 +363,58 @@ export default class Task extends HTMLElement {
         await store.update(this.task);
     }
 
+    private moveUp = async (): Promise<void> => {
+        const element: Task|null = this.previousSibling as Task|null;
+        if (!element) {
+            return;
+        }
+
+        const parent: Task|null = this.parent();
+        if (!parent) {
+            return;
+        }
+
+        const cursor: number = this.getCursorPosition();
+
+        const idx: number = parent.task.children.indexOf(element.id);
+        parent.task.children[idx] = this.id;
+        parent.task.children[idx + 1] = element.id;
+
+        parent.addSubtaskBefore(this, element);
+
+        this.tasktext.focus();
+        this.setCursorPosition(cursor);
+
+        await store.update(parent.task);
+    }
+
+    private moveDown = async (): Promise<void> => {
+        const element: Task|null = this.nextSibling as Task|null;
+        if (!element) {
+            return;
+        }
+
+        const parent: Task|null = this.parent();
+        if (!parent) {
+            return;
+        }
+
+        const cursor: number = this.getCursorPosition();
+
+        const idx: number = parent.task.children.indexOf(element.id);
+        parent.task.children[idx] = this.id;
+        parent.task.children[idx - 1] = element.id;
+
+        parent.addSubtaskAfter(this, element);
+
+        this.tasktext.focus();
+        this.setCursorPosition(cursor);
+
+        await store.update(parent.task);
+    }
+
     private moveFocusUp = async (): Promise<void> => {
-        const element: Task = this.previousSibling as Task;
+        const element: Task|null = this.previousSibling as Task|null;
         if (element) {
             this.moveFocus(element);
             return;
