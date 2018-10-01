@@ -3,6 +3,8 @@ import { Task as TaskTemplate } from "../../store/interfaces";
 import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
 
+const FOCUS_SAVE_INTERVAL: number = 5000;
+
 export default class Task extends HTMLElement {
     private task: TaskTemplate;
     private checkbox: Checkbox;
@@ -40,6 +42,7 @@ export default class Task extends HTMLElement {
         (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.onLinkClick);
         this.tasktext.addEventListener("keypress", this.onKeyPress);
         this.tasktext.addEventListener("blur", this.updateText);
+        this.tasktext.addEventListener("focus", this.onFocusText);
 
         this.checkbox.addEventListener("change", this.onStatusChange);
     }
@@ -346,6 +349,25 @@ export default class Task extends HTMLElement {
         } else {
             await this.drop();
         }
+    }
+
+    private onFocusText = (): void => {
+        const update: () => Promise<void> = async (): Promise<void> => {
+            if (this.tasktext !== document.activeElement) {
+                return;
+            }
+
+            if (this.task.text) {
+                this.task.text = this.tasktext.innerText;
+                await store.update(this.task);
+            }
+
+            if (this.tasktext === document.activeElement) {
+                this.onFocusText();
+            }
+        };
+
+        setTimeout(update, FOCUS_SAVE_INTERVAL);
     }
 
     private onStatusChange = async (e: Event): Promise<void> => {
