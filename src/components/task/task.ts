@@ -28,6 +28,8 @@ export default class Task extends HTMLElement {
         this.checkbox = new Checkbox(task.id);
         this.checked = task.checked;
 
+        this.isPinned = task.pinned;
+
         this.tasktext = document.createElement("span");
         if (task.text) {
             this.tasktext.innerText = task.text;
@@ -102,8 +104,10 @@ export default class Task extends HTMLElement {
     set isPinned(val: boolean) {
         if (val) {
             this.setAttribute("is-pinned", "true");
+            this.task.pinned = true;
         } else {
             this.removeAttribute("is-pinned");
+            this.task.pinned = false;
         }
     }
 
@@ -171,12 +175,13 @@ export default class Task extends HTMLElement {
         if (this.hasSubtasks) {
             this.expanded = !this.expanded;
         } else {
-            this.pin();
+            this.togglePinned();
         }
     }
 
-    private pin = (): void => {
+    private togglePinned = async (): Promise<void> => {
         this.isPinned = !this.isPinned;
+        await store.update(this.task);
     }
 
     private onKeyPress = (e: KeyboardEvent): void => {
