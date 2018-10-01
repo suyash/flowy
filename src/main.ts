@@ -1,15 +1,9 @@
-import "./main.scss";
-
-import "@webcomponents/custom-elements";
-
 import TaskElement from "./components/task/task";
 import { allowRooting, setRoot } from "./root";
 import { Task } from "./store/interfaces";
 import store from "./store/store";
 
-window.addEventListener("DOMContentLoaded", main);
-
-async function main(): Promise<void> {
+export default async function main(): Promise<void> {
     const root: Task = await store.task("root") as Task;
 
     if (!root) {

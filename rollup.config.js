@@ -9,9 +9,9 @@ const sourcemap = process.env.NODE_ENV !== "production";
 const minimize = process.env.NODE_ENV === "production";
 
 export default {
-    input: "src/main.ts",
+    input: "src/index.ts",
     output: {
-        file: "lib/main.js",
+        file: "lib/index.js",
         format: "iife",
         sourcemap,
     },
