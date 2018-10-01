@@ -56,8 +56,10 @@ export default class Task extends HTMLElement {
     set expanded(val: boolean) {
         if (val) {
             this.setAttribute("expanded", "true");
+            this.task.collapsed = false;
         } else {
             this.removeAttribute("expanded");
+            this.task.collapsed = true;
         }
     }
 
@@ -173,10 +175,15 @@ export default class Task extends HTMLElement {
     private onLinkClick = (e: Event): void => {
         e.preventDefault();
         if (this.hasSubtasks) {
-            this.expanded = !this.expanded;
+            this.toggleExpanded();
         } else {
             this.togglePinned();
         }
+    }
+
+    private toggleExpanded = async (): Promise<void> => {
+        this.expanded = !this.expanded;
+        await store.update(this.task);
     }
 
     private togglePinned = async (): Promise<void> => {

@@ -3,6 +3,7 @@ export interface Task {
     text: string;
     checked: boolean;
     pinned: boolean;
+    collapsed: boolean;
     children: string[];
 }
 

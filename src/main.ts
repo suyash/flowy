@@ -22,6 +22,8 @@ async function createElement(id: string): Promise<TaskElement> {
     const task: Task = await store.task(id) as Task;
     const element: TaskElement = new TaskElement(task);
 
+    const collapsed: boolean = task.collapsed;
+
     allowRooting(element);
 
     const items: TaskElement[] = await Promise.all(
@@ -30,6 +32,10 @@ async function createElement(id: string): Promise<TaskElement> {
 
     for (const item of items) {
         element.addSubtask(item);
+    }
+
+    if (collapsed) {
+        element.removeAttribute("expanded");
     }
 
     return element;

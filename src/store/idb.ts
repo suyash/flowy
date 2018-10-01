@@ -15,7 +15,7 @@ const taskStore: IDBTaskStore = {
 
     async create(parent: Task, text: string = ""): Promise<Task> {
         const id: string = uuid();
-        const task: Task = { id, text, checked: false, pinned: false, children: [] };
+        const task: Task = { id, text, checked: false, pinned: false, collapsed: false, children: [] };
 
         parent.children.push(id);
 
@@ -29,7 +29,7 @@ const taskStore: IDBTaskStore = {
 
     async createBefore(parent: Task, nextSibling: Task, text: string = ""): Promise<Task> {
         const id: string = uuid();
-        const task: Task = { id, text, checked: false, pinned: false, children: [] };
+        const task: Task = { id, text, checked: false, pinned: false, collapsed: false, children: [] };
 
         const index: number = parent.children.indexOf(nextSibling.id);
 
@@ -52,7 +52,7 @@ const taskStore: IDBTaskStore = {
     },
 
     async initialize(): Promise<Task> {
-        const root: Task = { id: "root", text: " ", checked: false, pinned: false, children: [] };
+        const root: Task = { id: "root", text: " ", checked: false, pinned: false, collapsed: false, children: [] };
         await set("root", root, this.store);
         await this.create(root, "first item");
         return root;
