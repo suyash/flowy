@@ -20,7 +20,7 @@ export default [
             sourcemap,
         },
         plugins: [
-            typescript({ tsconfig }),
+            typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: "es2015" } } }),
             resolve({
                 browser: true,
                 main: false,
@@ -45,7 +45,7 @@ export default [
             sourcemap: false,
         },
         plugins: [
-            typescript({ tsconfig }),
+            typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: "es2015" } }  }),
             resolve({
                 browser: true,
                 main: false,
