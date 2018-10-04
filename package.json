@@ -5,6 +5,8 @@
   "license": "BSD 3-Clause",
   "scripts": {
     "build": "rollup -c",
+    "build:prod": "NODE_ENV=\"production\" rollup -c",
+    "clean": "rm -rf lib",
     "lint": "tslint -p . --fix",
     "watch": "rollup -c -w"
   },

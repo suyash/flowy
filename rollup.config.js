@@ -10,6 +10,7 @@ import pkg from "./package.json";
 const tsconfig = process.env.NODE_ENV === "production" ? "tsconfig.json" : "tsconfig.dev.json";
 const sourcemap = process.env.NODE_ENV !== "production";
 const minimize = process.env.NODE_ENV === "production";
+const sw = process.env.NODE_ENV === "production";
 
 export default [
     {
@@ -20,12 +21,12 @@ export default [
             sourcemap,
         },
         plugins: [
-            typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: "es2015" } } }),
             resolve({
                 browser: true,
                 main: false,
             }),
             commonjs(),
+            typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: "es2015" } } }),
             postcss({
                 extract: true,
                 minimize,
@@ -34,6 +35,9 @@ export default [
             copy({
                 verbose: true,
                 "src/index.html": "lib/index.html",
+            }),
+            replace({
+                USE_SERVICE_WORKER: sw,
             }),
         ],
     },
@@ -45,14 +49,14 @@ export default [
             sourcemap: false,
         },
         plugins: [
-            typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: "es2015" } }  }),
             resolve({
                 browser: true,
                 main: false,
             }),
             commonjs(),
+            typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: "es2015" } }  }),
             replace({
-                "CACHE_VERSION": pkg.version,
+                CACHE_VERSION: pkg.version,
             }),
         ],
     }
