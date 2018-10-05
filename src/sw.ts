@@ -7,7 +7,7 @@ const PRECACHE_URLS: string[] = [
 ];
 
 self.addEventListener("install", (event: any): void => {
-    event.waitUntil(precache().then((self as any).skipWaiting()));
+    event.waitUntil(precache().then(() => (self as any).skipWaiting()));
 });
 
 async function precache(): Promise<void> {
