@@ -15,7 +15,7 @@ export default async function main(): Promise<void> {
     rootElement.freezeText();
     setRoot(rootElement);
 
-    (document.querySelector("main") as HTMLElement).appendChild(rootElement);
+    (document.querySelector("#work") as HTMLElement).appendChild(rootElement);
 }
 
 async function createElement(id: string): Promise<TaskElement> {

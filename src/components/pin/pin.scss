@@ -1,0 +1,9 @@
+@import "../task/task.scss";
+
+x-pin {
+    @extend %task;
+
+    > header {
+        display: flex;
+    }
+}

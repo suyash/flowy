@@ -2,6 +2,7 @@ import { allowRooting } from "../../root";
 import { Task as TaskTemplate } from "../../store/interfaces";
 import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
+import Pin from "../pin/pin";
 
 const FOCUS_SAVE_INTERVAL: number = 5000;
 
@@ -10,7 +11,6 @@ export default class Task extends HTMLElement {
     private checkbox: Checkbox;
     private tasktext: HTMLSpanElement;
     private subtasks: HTMLElement;
-    private node: DocumentFragment;
 
     constructor(task: TaskTemplate) {
         super();
@@ -18,8 +18,8 @@ export default class Task extends HTMLElement {
         this.task = task;
 
         const template: HTMLTemplateElement = document.querySelector("#task") as HTMLTemplateElement;
-        this.node = document.importNode(template.content, true);
-        this.appendChild(this.node);
+        const node: DocumentFragment = document.importNode(template.content, true);
+        this.appendChild(node);
 
         this.id = task.id;
 
@@ -28,8 +28,6 @@ export default class Task extends HTMLElement {
         this.checkbox = new Checkbox(task.id);
         this.checked = task.checked;
 
-        this.isPinned = task.pinned;
-
         this.tasktext = document.createElement("span");
         if (task.text) {
             this.tasktext.innerText = task.text;
@@ -37,13 +35,15 @@ export default class Task extends HTMLElement {
 
         this.tasktext.setAttribute("contenteditable", "true");
 
+        this.isPinned = task.pinned;
+
         const header: HTMLElement = this.querySelector("header") as HTMLElement;
         header.appendChild(this.checkbox);
         header.appendChild(this.tasktext);
 
         (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.onLinkClick);
         this.tasktext.addEventListener("keypress", this.onKeyPress);
-        this.tasktext.addEventListener("blur", this.updateText);
+        this.tasktext.addEventListener("blur", this.updateTextCache);
         this.tasktext.addEventListener("focus", this.onFocusText);
 
         this.checkbox.addEventListener("change", this.onStatusChange);
@@ -107,6 +107,7 @@ export default class Task extends HTMLElement {
         if (val) {
             this.setAttribute("is-pinned", "true");
             this.task.pinned = true;
+            (document.querySelector("#pins") as HTMLElement).appendChild(new Pin(this));
         } else {
             this.removeAttribute("is-pinned");
             this.task.pinned = false;
@@ -143,6 +144,11 @@ export default class Task extends HTMLElement {
         this.tasktext.removeAttribute("contenteditable");
     }
 
+    public async updateText(text: string): Promise<void> {
+        this.tasktext.innerText = text;
+        await this.updateTextCache();
+    }
+
     public parent(): Task|null {
         const candidate: HTMLElement | null = (this.parentElement as HTMLElement).parentElement;
         if (candidate instanceof Task) {
@@ -150,6 +156,26 @@ export default class Task extends HTMLElement {
         }
 
         return null;
+    }
+
+    public async toggleChecked(): Promise<void> {
+        this.checked = !this.checked;
+        await store.update(this.task);
+    }
+
+    public async toggleExpanded(): Promise<void> {
+        this.expanded = !this.expanded;
+        await store.update(this.task);
+    }
+
+    public async togglePinned(): Promise<void> {
+        this.isPinned = !this.isPinned;
+
+        if (!this.isPinned) {
+            (document.querySelector(`#pinned-${this.id}`) as HTMLElement).remove();
+        }
+
+        await store.update(this.task);
     }
 
     private addSubtaskBefore = (task: Task, nextSibling: Task): void => {
@@ -179,16 +205,6 @@ export default class Task extends HTMLElement {
         } else {
             this.togglePinned();
         }
-    }
-
-    private toggleExpanded = async (): Promise<void> => {
-        this.expanded = !this.expanded;
-        await store.update(this.task);
-    }
-
-    private togglePinned = async (): Promise<void> => {
-        this.isPinned = !this.isPinned;
-        await store.update(this.task);
     }
 
     private onKeyPress = (e: KeyboardEvent): void => {
@@ -354,7 +370,7 @@ export default class Task extends HTMLElement {
         this.setCursorPosition(pos);
     }
 
-    private updateText = async (): Promise<void> => {
+    private updateTextCache = async (): Promise<void> => {
         this.task.text = this.tasktext.innerText;
         if (this.task.text) {
             await store.update(this.task);
@@ -369,7 +385,7 @@ export default class Task extends HTMLElement {
                 return;
             }
 
-            if (this.task.text) {
+            if (this.task.text !== this.tasktext.innerText) {
                 this.task.text = this.tasktext.innerText;
                 await store.update(this.task);
             }

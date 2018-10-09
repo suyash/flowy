@@ -1,7 +1,8 @@
 @import "~normalize.css";
 
-@import "./components/checkbox/checkbox.scss";
-@import "./components/task/task.scss";
+@import "./components/checkbox/checkbox";
+// @import "./components/task/task";
+@import "./components/pin/pin";
 
 html, body {
     width: 100%;
