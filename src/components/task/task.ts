@@ -160,6 +160,7 @@ export default class Task extends HTMLElement {
 
     public async toggleChecked(): Promise<void> {
         this.checked = !this.checked;
+        this.task.checked = this.checked;
         await store.update(this.task);
     }
 

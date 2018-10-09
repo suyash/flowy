@@ -104,6 +104,14 @@
                 }
             }
         }
+
+        &[checked] {
+            > header {
+                > a {
+                    pointer-events: auto;
+                }
+            }
+        }
     }
 
     &[expanded] {
