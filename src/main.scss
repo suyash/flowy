@@ -20,13 +20,14 @@ main {
     padding: 2rem 6rem;
 
     hr {
-        border: 1px solid #27ae60;
+        border: 0.1rem solid #27ae60;
         width: 80%;
+        margin: 1.5rem 0;
     }
 }
 
 #pins {
     x-pin:last-child {
-        margin-bottom: 4rem;
+        margin-bottom: 1rem;
     }
 }
