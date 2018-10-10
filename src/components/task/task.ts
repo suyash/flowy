@@ -70,6 +70,7 @@ export default class Task extends HTMLElement {
     set hasSubtasks(val: boolean) {
         if (val) {
             this.setAttribute("has-subtasks", "true");
+            this.isPinned = false;
         } else {
             this.removeAttribute("has-subtasks");
         }
@@ -111,6 +112,11 @@ export default class Task extends HTMLElement {
         } else {
             this.removeAttribute("is-pinned");
             this.task.pinned = false;
+
+            const pinElement: HTMLElement|null = document.querySelector(`#pinned-${this.id}`);
+            if (pinElement) {
+                pinElement.remove();
+            }
         }
     }
 
@@ -171,11 +177,6 @@ export default class Task extends HTMLElement {
 
     public async togglePinned(): Promise<void> {
         this.isPinned = !this.isPinned;
-
-        if (!this.isPinned) {
-            (document.querySelector(`#pinned-${this.id}`) as HTMLElement).remove();
-        }
-
         await store.update(this.task);
     }
 
