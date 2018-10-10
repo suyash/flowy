@@ -8,6 +8,7 @@
     "build:prod": "NODE_ENV=\"production\" rollup -c",
     "clean": "rm -rf lib",
     "lint": "tslint -p . --fix",
+    "start": "serve lib -p 3000",
     "watch": "rollup -c -w"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "rollup-plugin-postcss": "^1.6.2",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript2": "^0.17.0",
+    "serve": "^10.0.2",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3"
   },
