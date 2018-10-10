@@ -18,4 +18,15 @@ main {
     flex-direction: column;
     align-items: center;
     padding: 2rem 6rem;
+
+    hr {
+        border: 1px solid #27ae60;
+        width: 80%;
+    }
+}
+
+#pins {
+    x-pin:last-child {
+        margin-bottom: 4rem;
+    }
 }
