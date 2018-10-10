@@ -3,11 +3,12 @@
     color: #222;
     font-size: 1rem;
     min-width: 10rem;
-    padding-top: 0.5rem;
 
     header {
         display: flex;
         align-items: center;
+        padding-top: 0.5rem;
+        width: 100%;
 
         x-checkbox {
             margin-right: 0.5rem;
@@ -37,7 +38,7 @@
         }
 
         span {
-            width: 100%;
+            display: block;
             border: 0;
             outline: 0;
             white-space: pre-wrap;
