@@ -1,5 +1,5 @@
 import { allowRooting } from "../../root";
-import { Task as TaskTemplate } from "../../store/interfaces";
+import { Task as TaskInterface } from "../../store/interfaces";
 import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
 import Pin from "../pin/pin";
@@ -7,12 +7,12 @@ import Pin from "../pin/pin";
 const FOCUS_SAVE_INTERVAL: number = 5000;
 
 export default class Task extends HTMLElement {
-    private task: TaskTemplate;
+    private task: TaskInterface;
     private checkbox: Checkbox;
     private tasktext: HTMLSpanElement;
     private subtasks: HTMLElement;
 
-    constructor(task: TaskTemplate) {
+    constructor(task: TaskInterface) {
         super();
 
         this.task = task;
@@ -302,13 +302,13 @@ export default class Task extends HTMLElement {
         const nextSibling: Task|null = this.nextSibling as Task|null;
 
         if (!nextSibling) {
-            const newTask: TaskTemplate = await store.create(parent.task);
+            const newTask: TaskInterface = await store.create(parent.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtask(newTaskElement);
             allowRooting(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         } else {
-            const newTask: TaskTemplate = await store.createBefore(parent.task, nextSibling.task);
+            const newTask: TaskInterface = await store.createBefore(parent.task, nextSibling.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtaskBefore(newTaskElement, nextSibling);
             allowRooting(newTaskElement);
