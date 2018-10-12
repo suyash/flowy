@@ -30,7 +30,32 @@ function createNavLink(task: TaskElement): HTMLAnchorElement {
     }
 
     a.href = "#";
+
+    a.addEventListener("click", (e: MouseEvent): void => {
+        e.preventDefault();
+        navigateTo(task.id);
+    });
+
     return a;
+}
+
+function navigateTo(id: string): void {
+    while (root.id !== id) {
+        const parent: TaskElement|null = root.parent();
+        if (!parent) {
+            break;
+        }
+
+        parent.ancestor = false;
+        root.root = false;
+        parent.root = true;
+        root = parent;
+
+        const a: HTMLAnchorElement|null = nav.querySelector("a:last-child");
+        if (a) {
+            a.remove();
+        }
+    }
 }
 
 function onDoubleClick(task: TaskElement): void {
