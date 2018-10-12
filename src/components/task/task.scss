@@ -1,56 +1,60 @@
-%task {
+%taskheader {
+    display: flex;
+    align-items: center;
+    padding-top: 0.5rem;
+    width: 100%;
+
+    x-checkbox {
+        margin-right: 0.5rem;
+    }
+
+    > a {
+        display: block;
+        margin-right: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+        text-decoration: none;
+        color: inherit;
+        border: 0;
+        outline: 0;
+        opacity: 0.2;
+        transition: all ease-in-out 0.05s;
+
+        &:before {
+            content: "📌";
+            font-size: 0.9rem;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    span {
+        display: block;
+        border: 0;
+        outline: 0;
+        white-space: pre-wrap;
+        word-break: break-all;
+        line-height: 1.5rem;
+        min-height: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    x-checkbox[checked] + span {
+        color: #aaa;
+    }
+}
+
+x-task {
     display: flex;
     color: #222;
     font-size: 1rem;
     min-width: 10rem;
 
     header {
-        display: flex;
-        align-items: center;
-        padding-top: 0.5rem;
-        width: 100%;
-
-        x-checkbox {
-            margin-right: 0.5rem;
-        }
-
-        > a {
-            display: block;
-            margin-right: 0.5rem;
-            width: 1rem;
-            height: 1rem;
-            font-size: 1rem;
-            text-decoration: none;
-            color: inherit;
-            border: 0;
-            outline: 0;
-            opacity: 0.2;
-            transition: all ease-in-out 0.05s;
-
-            &:before {
-                content: "📌";
-                font-size: 0.9rem;
-            }
-
-            &:hover {
-                opacity: 1;
-            }
-        }
-
-        span {
-            display: block;
-            border: 0;
-            outline: 0;
-            white-space: pre-wrap;
-            word-break: break-all;
-            line-height: 1.5rem;
-            min-height: 1.5rem;
-            padding-right: 1.5rem;
-        }
-
-        x-checkbox[checked] + span {
-            color: #aaa;
-        }
+        @extend %taskheader;
     }
 
     footer {
@@ -160,10 +164,6 @@
             margin-left: 0;
         }
     }
-}
-
-x-task {
-    @extend %task;
 }
 
 x-task[id="root"] {

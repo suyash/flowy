@@ -17,12 +17,20 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 6rem;
+    padding: 2rem 2rem;
+
+    @media screen and (min-width: 720px) {
+        padding: 2rem 6rem;
+    }
 
     hr {
         border: 0.1rem solid #27ae60;
-        width: 80%;
+        width: 90%;
         margin-top: 1.5rem;
+
+        @media screen and (min-width: 720px) {
+            width: 80%;
+        }
     }
 }
 

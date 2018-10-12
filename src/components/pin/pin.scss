@@ -1,9 +1,15 @@
 @import "../task/task.scss";
 
 x-pin {
-    @extend %task;
+    header {
+        @extend %taskheader;
+    }
 
     > header {
         display: flex;
+
+        > a {
+            opacity: 1;
+        }
     }
 }

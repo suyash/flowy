@@ -19,8 +19,6 @@ export default class Pin extends HTMLElement {
 
         this.checkbox = new Checkbox(task.id);
 
-        this.setAttribute("is-pinned", "true");
-
         this.tasktext = document.createElement("span");
         this.tasktext.innerText = task.textElement.innerText;
         this.tasktext.setAttribute("contenteditable", "true");
