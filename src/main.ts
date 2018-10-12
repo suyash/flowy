@@ -1,5 +1,5 @@
 import TaskElement from "./components/task/task";
-import { allowRooting, setRoot } from "./root";
+import { allowRooting, init as initRoot } from "./root";
 import { Task } from "./store/interfaces";
 import store from "./store/store";
 
@@ -13,7 +13,7 @@ export default async function main(): Promise<void> {
     const rootElement: TaskElement = await createElement("root");
     rootElement.root = true;
     rootElement.freezeText();
-    setRoot(rootElement);
+    initRoot(rootElement);
 
     (document.querySelector("#work") as HTMLElement).appendChild(rootElement);
 }

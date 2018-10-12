@@ -22,12 +22,50 @@ main {
     hr {
         border: 0.1rem solid #27ae60;
         width: 80%;
-        margin: 1.5rem 0;
+        margin-top: 1.5rem;
     }
 }
 
 #pins {
     x-pin:last-child {
         margin-bottom: 1rem;
+    }
+}
+
+#work {
+    nav {
+        display: flex;
+        justify-content: center;
+        font-size: 1rem;
+        line-height: 2.5rem;
+
+        a {
+            max-width: 8rem;
+
+            color: inherit;
+            text-decoration: none;
+            overflow-x: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            padding-left: 1rem;
+
+            &:before {
+                content: "›";
+                padding-right: 1rem;
+            }
+
+            &:first-child {
+                padding-left: 0;
+
+                &:before {
+                    content: "";
+                }
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
