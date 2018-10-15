@@ -17,10 +17,10 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 2rem;
+    padding: 0 2rem 2rem 2rem;
 
     @media screen and (min-width: 720px) {
-        padding: 2rem 6rem;
+        padding: 0 6rem 2rem 6rem;
     }
 
     hr {
@@ -30,6 +30,56 @@ main {
 
         @media screen and (min-width: 720px) {
             width: 80%;
+        }
+    }
+
+    aside {
+        margin: 0.5rem 0 0 0;
+        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+        display: flex;
+        margin-right: auto;
+        align-items: center;
+
+        a {
+            text-decoration: none;
+            padding: 0.1rem 0;
+
+            & + section {
+                display: none;
+                margin: 0 2rem;
+                position: relative;
+                z-index: 1000;
+
+                header {
+                    display: flex;
+                    padding: 0.1rem 0;
+                    box-sizing: border-box;
+                    z-index: 1001;
+                }
+
+                section {
+                    position: absolute;
+                    display: none;
+                    width: 1000%;
+                    padding: 0 1rem 0.5rem 0;
+                    margin-top: 1.5rem;
+                    background-color: #fff;
+                    box-sizing: border-box;
+                    line-height: 1.5rem;
+                }
+            }
+        }
+
+        &:hover {
+            a + section {
+                display: flex;
+
+                header:hover {
+                    & + section {
+                        display: block;
+                    }
+                }
+            }
         }
     }
 }

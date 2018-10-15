@@ -29,12 +29,34 @@
     </template>
 
     <main>
+        <aside>
+            <a href="#">☰</a>
+            <section id="about">
+                <header>About</header>
+                <section>
+                    TaskFlowy is a WorkFlowy clone that provides three main features different from WorkFlowy
+
+                    <ul>
+                        <li>
+                            <b>Offline</b>: It installs a service worker and works using IndexedDB as an offline first cache.
+                        </li>
+                        <li>
+                            <b>Signed Out</b>: No need to sign in to anything to use it, works out of the box with the browser cache. The browser cache will generally persist unless it is unused for a very long time.
+                        </li>
+                        <li>
+                            <b>Moving Storage</b>: To get off-browser persistence, for example to sync the same set of tasks on another device, allows plugging in your own storage server with an OAuth key, or using Firebase (a backend-as-a-service from Google) Firestore.
+                        </li>
+                    </ul>
+                </section>
+            </section>
+        </aside>
         <section id="pins"></section>
         <hr>
         <section id="work">
             <nav></nav>
         </section>
     </main>
+
     <script src="index.js"></script>
 </body>
 </html>
