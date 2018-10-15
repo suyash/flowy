@@ -127,6 +127,10 @@ export default class Task extends HTMLElement {
     set checked(val: boolean) {
         if (val) {
             this.setAttribute("checked", "true");
+            this.isPinned = false;
+
+            // NOTE: might be a problem
+            store.update(this.task);
         } else {
             this.removeAttribute("checked");
         }
