@@ -17,7 +17,7 @@ export default class Pin extends HTMLElement {
 
         this.id = `pinned-${task.id}`;
 
-        this.checkbox = new Checkbox(task.id);
+        this.checkbox = new Checkbox(this.id);
 
         this.tasktext = document.createElement("span");
         this.tasktext.innerText = task.textElement.innerText;

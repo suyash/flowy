@@ -30,16 +30,15 @@ function createNavLink(task: TaskElement): HTMLAnchorElement {
     }
 
     a.href = "#";
-
-    a.addEventListener("click", (e: MouseEvent): void => {
-        e.preventDefault();
-        navigateTo(task.id);
-    });
-
+    a.setAttribute("data-task-id", task.id);
+    a.addEventListener("click", onNavigationLinkClick);
     return a;
 }
 
-function navigateTo(id: string): void {
+function onNavigationLinkClick(e: MouseEvent): void {
+    e.preventDefault();
+
+    const id: string = (e.target as HTMLElement).getAttribute("data-task-id") as string;
     while (root.id !== id) {
         const parent: TaskElement|null = root.parent();
         if (!parent) {
