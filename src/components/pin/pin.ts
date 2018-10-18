@@ -78,7 +78,6 @@ export default class Pin extends HTMLElement {
     private onStatusChange = async (): Promise<void> => {
         await Promise.all([
             this.task.toggleChecked(),
-            this.task.togglePinned(),
         ]);
 
         this.remove();
