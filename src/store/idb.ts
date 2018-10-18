@@ -7,7 +7,7 @@ interface IDBTaskStore extends TaskStore {
 }
 
 const taskStore: IDBTaskStore = {
-    store: new Store("taskflowy", "tasks"),
+    store: new Store("flowy", "tasks"),
 
     task(id: string): Promise<Task> {
         return get(id, this.store) as Promise<Task>;
