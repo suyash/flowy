@@ -5,7 +5,7 @@
   "license": "BSD 3-Clause",
   "scripts": {
     "build": "rollup -c",
-    "build:prod": "NODE_ENV=\"production\" rollup -c",
+    "build:prod": "rm -rf lib && NODE_ENV=\"production\" rollup -c",
     "clean": "rm -rf lib",
     "lint": "tslint -p . --fix",
     "start": "serve lib -p 3000",
@@ -24,6 +24,7 @@
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-postcss": "^1.6.2",
     "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-terser": "^3.0.0",
     "rollup-plugin-typescript2": "^0.17.0",
     "serve": "^10.0.2",
     "tslint": "^5.11.0",

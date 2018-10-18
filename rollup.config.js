@@ -3,6 +3,7 @@ import copy from "rollup-plugin-copy";
 import postcss from "rollup-plugin-postcss";
 import replace from "rollup-plugin-replace";
 import resolve from "rollup-plugin-node-resolve";
+import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 
 import pkg from "./package.json";
@@ -39,6 +40,7 @@ export default [
             replace({
                 USE_SERVICE_WORKER: sw,
             }),
+            minimize && terser({ sourcemap }),
         ],
     },
     {
@@ -58,6 +60,7 @@ export default [
             replace({
                 CACHE_VERSION: pkg.version,
             }),
+            minimize && terser({ sourcemap }),
         ],
     }
 ];
