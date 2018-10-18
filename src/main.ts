@@ -16,6 +16,10 @@ export default async function main(): Promise<void> {
     initRoot(rootElement);
 
     (document.querySelector("#work") as HTMLElement).appendChild(rootElement);
+
+    for (const el of (document.querySelectorAll("aside a") as any)) {
+        el.addEventListener("click", onInfoLinkClick);
+    }
 }
 
 async function createElement(id: string): Promise<TaskElement> {
@@ -39,4 +43,15 @@ async function createElement(id: string): Promise<TaskElement> {
     }
 
     return element;
+}
+
+function onInfoLinkClick(this: HTMLAnchorElement, e: MouseEvent): void {
+    e.preventDefault();
+
+    const parent: HTMLElement = this.parentElement as HTMLElement;
+    if (parent.hasAttribute("data-open")) {
+        parent.removeAttribute("data-open");
+    } else {
+        parent.setAttribute("data-open", "true");
+    }
 }
