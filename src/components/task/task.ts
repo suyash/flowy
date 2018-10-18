@@ -49,6 +49,12 @@ export default class Task extends HTMLElement {
         this.checkbox.addEventListener("change", this.onStatusChange);
     }
 
+    public connectedCallback(): void {
+        if (this.isPinned) {
+            (document.querySelector(`#pinned-${this.id}`) as Pin).updateLocation();
+        }
+    }
+
     get expanded(): boolean {
         return this.hasAttribute("expanded");
     }

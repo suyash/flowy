@@ -12,4 +12,24 @@ x-pin {
             opacity: 1;
         }
     }
+
+    > footer {
+        display: flex;
+        padding: 0.1rem 0.5rem 0 3rem;
+        font-size: 0.8rem;
+
+        div {
+            padding: 0 0 0 0.5rem;
+            color: #888;
+            max-width: 8rem;
+            overflow-x: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            &:before {
+                content: "›";
+                padding-right: 0.5rem;
+            }
+        }
+    }
 }

@@ -33,6 +33,32 @@ export default class Pin extends HTMLElement {
         this.checkbox.addEventListener("change", this.onStatusChange);
     }
 
+    public updateLocation(): void {
+        const footer: HTMLElement = this.querySelector("footer") as HTMLElement;
+
+        while (footer.hasChildNodes()) {
+            footer.removeChild(footer.lastChild as Node);
+        }
+
+        const s: string[] = [];
+
+        for (let p: Task|null = this.task.parent() ; p && p.id !== "root" ; p = p.parent()) {
+            s.push(p.textElement.innerText);
+        }
+
+        for (const x of s.reverse()) {
+            const item: HTMLDivElement = document.createElement("div");
+            item.innerHTML = x;
+            footer.appendChild(item);
+        }
+    }
+
+    public connectedCallback(): void {
+        if (this.task.isConnected) {
+            this.updateLocation();
+        }
+    }
+
     private onLinkClick = async (e: Event): Promise<void> => {
         e.preventDefault();
         await this.task.togglePinned();
