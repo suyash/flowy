@@ -46,7 +46,7 @@ export default class Task extends HTMLElement {
         this.tasktext.addEventListener("blur", this.updateTextCache);
         this.tasktext.addEventListener("focus", this.onFocusText);
 
-        this.checkbox.addEventListener("change", this.onStatusChange);
+        this.checkbox.addEventListener("change", this.onCheckboxChange);
     }
 
     public connectedCallback(): void {
@@ -134,14 +134,18 @@ export default class Task extends HTMLElement {
         if (val) {
             this.setAttribute("checked", "true");
             this.isPinned = false;
-
-            // NOTE: might be a problem
-            store.update(this.task);
         } else {
             this.removeAttribute("checked");
         }
 
         this.checkbox.checked = val;
+
+        if (this.isConnected) {
+            const parent: Task|null = this.parent();
+            if (parent) {
+                parent.verifyChecked();
+            }
+        }
     }
 
     get textElement(): HTMLSpanElement {
@@ -190,6 +194,21 @@ export default class Task extends HTMLElement {
         await store.update(this.task);
     }
 
+    private onCheckboxChange = async (e: Event): Promise<void> => {
+        const newValue: boolean = (e.target as HTMLInputElement).checked;
+        if (newValue !== this.checked) {
+            await this.toggleChecked();
+        }
+    }
+
+    private verifyChecked = async (): Promise<void> => {
+        const uncheckedSubtask: HTMLElement|null = this.subtasks.querySelector("x-task:not([checked])");
+
+        if ((this.checked && uncheckedSubtask) || (!this.checked && !uncheckedSubtask)) {
+            await this.toggleChecked();
+        }
+    }
+
     private addSubtaskBefore = (task: Task, nextSibling: Task): void => {
         this.expanded = true;
 
@@ -219,20 +238,20 @@ export default class Task extends HTMLElement {
         }
     }
 
-    private onKeyPress = (e: KeyboardEvent): void => {
+    private onKeyPress = async (e: KeyboardEvent): Promise<void> => {
         if (e.shiftKey) {
             switch (e.keyCode) {
             case 9: // tab
                 e.preventDefault();
-                this.unshift();
+                await this.unshift();
                 break;
             case 38: // ArrowUp
                 e.preventDefault();
-                this.moveUp();
+                await this.moveUp();
                 break;
             case 40: // ArrowDown
                 e.preventDefault();
-                this.moveDown();
+                await this.moveDown();
                 break;
             }
 
@@ -243,11 +262,11 @@ export default class Task extends HTMLElement {
             switch (e.keyCode) {
             case 8: // backspace
                 e.preventDefault();
-                this.drop();
+                await this.drop();
                 break;
             case 13: // enter
                 e.preventDefault();
-                this.toggleStatus();
+                await this.toggleChecked();
                 break;
             case 38: // ArrowUp
                 e.preventDefault();
@@ -265,19 +284,19 @@ export default class Task extends HTMLElement {
         switch (e.keyCode) {
         case 9: // tab
             e.preventDefault();
-            this.shift();
+            await this.shift();
             break;
         case 13: // enter
             e.preventDefault();
-            this.addSibling();
+            await this.addSibling();
             break;
         case 38: // ArrowUp
             e.preventDefault();
-            this.moveFocusUp();
+            await this.moveFocusUp();
             break;
         case 40: // ArrowDown
             e.preventDefault();
-            this.moveFocusDown();
+            await this.moveFocusDown();
             break;
         }
     }
@@ -408,21 +427,6 @@ export default class Task extends HTMLElement {
         };
 
         setTimeout(update, FOCUS_SAVE_INTERVAL);
-    }
-
-    private onStatusChange = async (e: Event): Promise<void> => {
-        this.checked = (e.target as HTMLInputElement).checked;
-        await this.setStatus(this.checked);
-    }
-
-    private toggleStatus = async (): Promise<void> => {
-        this.checked = !this.checked;
-        await this.setStatus(this.checked);
-    }
-
-    private setStatus = async (status: boolean): Promise<void> => {
-        this.task.checked = status;
-        await store.update(this.task);
     }
 
     private moveUp = async (): Promise<void> => {
