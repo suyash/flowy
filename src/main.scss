@@ -139,3 +139,37 @@ main {
         }
     }
 }
+
+#storage {
+    > section {
+        padding: 1rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        input[type="url"] {
+            line-height: 1.5rem;
+        }
+
+        input[type="text"] {
+            line-height: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        input[type="radio"] {
+            margin-right: 0.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: row;
+            margin-right: 0.5rem;
+        }
+
+        > .form-group {
+            margin-top: 0.5rem;
+        }
+    }
+}

@@ -10,16 +10,38 @@ export default async function main(): Promise<void> {
         await store.initialize();
     }
 
-    const rootElement: TaskElement = await createElement("root");
-    rootElement.root = true;
-    rootElement.freezeText();
-    initRoot(rootElement);
-
-    (document.querySelector("#work") as HTMLElement).appendChild(rootElement);
+    let rootElement: TaskElement = await createElement("root");
+    reroot(rootElement);
 
     for (const el of (document.querySelectorAll("aside a") as any)) {
         el.addEventListener("click", onInfoLinkClick);
     }
+
+    const storageForm: HTMLFormElement = document.querySelector("#storage form") as HTMLFormElement;
+    storageForm.addEventListener("submit", async (e: Event): Promise<void> => {
+        e.preventDefault();
+
+        const url: string = (storageForm[0] as HTMLInputElement).value;
+        const apiKey: string = (storageForm[1] as HTMLInputElement).value;
+        // const resyncRemote: boolean = (storageForm[2] as HTMLInputElement).checked;
+        const resyncLocal: boolean = (storageForm[3] as HTMLInputElement).checked;
+
+        if (resyncLocal) {
+            await store.resyncLocal(url, apiKey);
+            rootElement.remove();
+            rootElement = await createElement("root");
+            reroot(rootElement);
+        } else {
+            await store.resyncRemote(url, apiKey);
+        }
+    });
+}
+
+function reroot(root: TaskElement): void {
+    root.root = true;
+    root.freezeText();
+    initRoot(root);
+    (document.querySelector("#work") as HTMLElement).appendChild(root);
 }
 
 async function createElement(id: string): Promise<TaskElement> {

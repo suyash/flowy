@@ -1,4 +1,4 @@
-import { del, get, set, Store } from "idb-keyval";
+import { del, get, keys, set, Store } from "idb-keyval";
 
 import { Task, TaskStore, uuid } from "./interfaces";
 
@@ -58,5 +58,10 @@ const taskStore: IDBTaskStore = {
         return root;
     },
 };
+
+export async function clear(): Promise<void> {
+    const ids: string[] = await keys(taskStore.store) as string[];
+    await Promise.all(ids.map((id: string): Promise<void> => del(id, taskStore.store)));
+}
 
 export default taskStore;

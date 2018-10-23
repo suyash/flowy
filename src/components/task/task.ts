@@ -55,6 +55,13 @@ export default class Task extends HTMLElement {
         }
     }
 
+    public disconnectedCallback(): void {
+        if (this.isPinned) {
+            const pinElement: HTMLElement|null = document.querySelector(`#pinned-${this.id}`) as HTMLElement;
+            pinElement.remove();
+        }
+    }
+
     get expanded(): boolean {
         return this.hasAttribute("expanded");
     }
@@ -145,6 +152,18 @@ export default class Task extends HTMLElement {
             if (parent) {
                 parent.verifyChecked();
             }
+        }
+    }
+
+    get unsynced(): boolean {
+        return this.hasAttribute("unsynced");
+    }
+
+    set unsynced(val: boolean) {
+        if (val) {
+            this.setAttribute("unsynced", "true");
+        } else {
+            this.removeAttribute("unsynced");
         }
     }
 

@@ -31,6 +31,30 @@
     <main>
         <aside>
             <a href="#">☰</a>
+            <section id="storage">
+                <a href="#">Set Storage</a>
+                <section>
+                    <form action="/add" method="POST">
+                        <input type="url" placeholder="https://..." required>
+                        <input type="text" placeholder="API Key" required>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <input type="radio" name="sync" id="storage-sync-external-storage" checked value="external-storage">
+                                <label for="storage-sync-external-storage">Resync External Storage</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="radio" name="sync" id="storage-sync-local-storage" value="local-storage">
+                                <label for="storage-sync-local-storage">Resync Local Storage</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </section>
+            </section>
             <section id="shortcuts">
                 <a href="#">Keyboard</a>
                 <section>
