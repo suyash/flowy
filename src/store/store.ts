@@ -64,7 +64,9 @@ const store: CombinedPrivateTaskStore = {
         }
 
         const item: TaskElement = document.getElementById(task.id) as TaskElement;
-        item.unsynced = true;
+        if (item) {
+            item.unsynced = true;
+        }
 
         try {
             await fetch(`${this.url}/${task.id}`, {
@@ -75,7 +77,9 @@ const store: CombinedPrivateTaskStore = {
                 method: "DELETE",
             });
 
-            item.unsynced = false;
+            if (item) {
+                item.unsynced = false;
+            }
         } catch (err) {
             // tslint:disable-next-line:no-console
             console.error(err);
@@ -113,6 +117,10 @@ const store: CombinedPrivateTaskStore = {
     },
 
     async _updateLocal(task: Task): Promise<void> {
+        if (!task.children) {
+            task.children = [];
+        }
+
         idbTaskStore.update(task);
 
         await Promise.all(task.children.map(async (id: string): Promise<void> => {

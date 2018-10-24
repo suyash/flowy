@@ -34,6 +34,8 @@ export default async function main(): Promise<void> {
         } else {
             await store.resyncRemote(url, apiKey);
         }
+
+        (document.querySelector("aside") as HTMLElement).removeAttribute("data-open");
     });
 }
 
