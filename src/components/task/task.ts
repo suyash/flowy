@@ -41,7 +41,8 @@ export default class Task extends HTMLElement {
         header.appendChild(this.checkbox);
         header.appendChild(this.tasktext);
 
-        (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.onLinkClick);
+        (this.querySelector("header > a:first-child") as HTMLElement).addEventListener("click", this.onLinkClick);
+        (this.querySelector("header > a:nth-child(2)") as HTMLElement).addEventListener("click", this.onTryResync);
         this.tasktext.addEventListener("keypress", this.onKeyPress);
         this.tasktext.addEventListener("blur", this.updateTextCache);
         this.tasktext.addEventListener("focus", this.onFocusText);
@@ -255,6 +256,11 @@ export default class Task extends HTMLElement {
         } else {
             this.togglePinned();
         }
+    }
+
+    private onTryResync = async (e: Event): Promise<void> => {
+        e.preventDefault();
+        await store.update(this.task);
     }
 
     private onKeyPress = async (e: KeyboardEvent): Promise<void> => {
