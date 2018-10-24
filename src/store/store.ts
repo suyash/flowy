@@ -94,6 +94,12 @@ const store: CombinedPrivateTaskStore = {
         this.url = url;
         this.apiKey = apiKey;
 
+        window.localStorage.setItem("url", url);
+        window.localStorage.setItem("apiKey", apiKey);
+
+        (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
+        (document.querySelector("#status span") as HTMLElement).innerText = url;
+
         try {
             const resRoot: Response = await fetch(`${this.url}/root`, {
                 headers: {
@@ -140,6 +146,13 @@ const store: CombinedPrivateTaskStore = {
         this.url = url;
         this.apiKey = apiKey;
 
+        window.localStorage.setItem("url", url);
+        window.localStorage.setItem("apiKey", apiKey);
+
+        (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
+        (document.querySelector("#status a") as HTMLAnchorElement).innerText = url;
+        (document.querySelector("#status a") as HTMLAnchorElement).href = url;
+
         const task: Task = await idbTaskStore.task("root");
         await this._updateRemote(task);
     },
@@ -151,5 +164,14 @@ const store: CombinedPrivateTaskStore = {
         }));
     },
 };
+
+store.url = window.localStorage.getItem("url");
+store.apiKey = window.localStorage.getItem("apiKey");
+
+if (store.url) {
+    (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
+    (document.querySelector("#status a") as HTMLAnchorElement).innerText = store.url;
+    (document.querySelector("#status a") as HTMLAnchorElement).href = store.url;
+}
 
 export default store;
