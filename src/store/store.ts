@@ -45,16 +45,21 @@ const store: CombinedPrivateTaskStore = {
         const item: TaskElement = document.getElementById(task.id) as TaskElement;
         item.unsynced = true;
 
-        await fetch(`${this.url}/set`, {
-            body: JSON.stringify(task),
-            headers: {
-                "Content-Type": "application/json",
-                "X-API-Key": this.apiKey as string,
-            },
-            method: "POST",
-        });
+        try {
+            await fetch(`${this.url}/set`, {
+                body: JSON.stringify(task),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-Key": this.apiKey as string,
+                },
+                method: "POST",
+            });
 
-        item.unsynced = false;
+            item.unsynced = false;
+        } catch (err) {
+            // tslint:disable-next-line:no-console
+            console.error(err);
+        }
     },
 
     async remove(task: Task): Promise<void> {
