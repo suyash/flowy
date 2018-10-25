@@ -166,16 +166,17 @@ main {
         display: flex;
         flex-direction: column;
 
-        input[type="url"] {
-            line-height: 1.5rem;
-        }
-
-        input[type="text"] {
+        input {
             line-height: 1.5rem;
             margin-top: 0.5rem;
         }
 
+        input[type="url"] {
+            margin-top: 0;
+        }
+
         input[type="radio"] {
+            margin-top: 0;
             margin-right: 0.25rem;
         }
 

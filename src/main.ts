@@ -13,9 +13,10 @@ export default async function main(): Promise<void> {
     let rootElement: TaskElement = await createElement("root");
     reroot(rootElement);
 
-    for (const el of (document.querySelectorAll("aside a") as any)) {
-        el.addEventListener("click", onInfoLinkClick);
-    }
+    (document.querySelector("aside > a") as HTMLAnchorElement).addEventListener("click", onInfoLinkClick);
+    (document.querySelector("#storage a") as HTMLAnchorElement).addEventListener("click", onInfoLinkClick);
+    (document.querySelector("#shortcuts a") as HTMLAnchorElement).addEventListener("click", onInfoLinkClick);
+    (document.querySelector("#about a") as HTMLAnchorElement).addEventListener("click", onInfoLinkClick);
 
     const storageForm: HTMLFormElement = document.querySelector("#storage form") as HTMLFormElement;
     storageForm.addEventListener("submit", async (e: Event): Promise<void> => {
