@@ -1,9 +1,9 @@
 const VERSION: string = "CACHE_VERSION";
 
 const PRECACHE_URLS: string[] = [
-    "/",
-    "/index.css",
-    "/index.js",
+    "./",
+    "./index.css",
+    "./index.js",
 ];
 
 self.addEventListener("install", (event: any): void => {
