@@ -42,7 +42,11 @@
         word-break: break-all;
         line-height: 1.5rem;
         min-height: 1.5rem;
-        padding-right: 1.5rem;
+
+        @media screen and (max-width: 576px) {
+            white-space: nowrap;
+            word-break: keep-all;
+        }
     }
 
     x-checkbox[checked] + span {

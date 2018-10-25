@@ -28,6 +28,11 @@ main {
         padding: 0 6rem 2rem 6rem;
     }
 
+    @media screen and (max-width: 576px) {
+        padding: 0 0 2rem 2rem;
+        align-items: start;
+    }
+
     hr {
         border: 0.1rem solid #27ae60;
         width: 90%;
@@ -77,6 +82,10 @@ main {
                 display: none;
                 background-color: #ddd;
                 z-index: 10001;
+
+                @media screen and (max-width: 576px) {
+                    width: 15rem;
+                }
             }
 
             &[data-open] {
@@ -94,6 +103,11 @@ main {
             > section {
                 display: flex;
             }
+        }
+
+        @media screen and (max-width: 576px) {
+            top: 0.5rem;
+            left: 0.5rem;
         }
     }
 }
