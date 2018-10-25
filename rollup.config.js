@@ -33,7 +33,7 @@ export default [
                 minimize,
                 sourceMap: sourcemap,
             }),
-            copy({
+            !minimize && copy({
                 verbose: true,
                 "src/index.html": "lib/index.html",
             }),
