@@ -98,12 +98,7 @@ const store: CombinedPrivateTaskStore = {
     async resyncLocal(url: string, apiKey: string): Promise<void> {
         this.url = url;
         this.apiKey = apiKey;
-
-        window.localStorage.setItem("url", url);
-        window.localStorage.setItem("apiKey", apiKey);
-
-        (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
-        (document.querySelector("#status span") as HTMLElement).innerText = url;
+        updateSyncCredentials(url, apiKey);
 
         try {
             const resRoot: Response = await fetch(`${this.url}/root`, {
@@ -150,13 +145,7 @@ const store: CombinedPrivateTaskStore = {
     async resyncRemote(url: string, apiKey: string): Promise<void> {
         this.url = url;
         this.apiKey = apiKey;
-
-        window.localStorage.setItem("url", url);
-        window.localStorage.setItem("apiKey", apiKey);
-
-        (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
-        (document.querySelector("#status a") as HTMLAnchorElement).innerText = url;
-        (document.querySelector("#status a") as HTMLAnchorElement).href = url;
+        updateSyncCredentials(url, apiKey);
 
         const task: Task = await idbTaskStore.task("root");
         await this._updateRemote(task);
@@ -170,13 +159,20 @@ const store: CombinedPrivateTaskStore = {
     },
 };
 
+function updateSyncCredentials(url: string, apiKey: string): void {
+    window.localStorage.setItem("url", url);
+    window.localStorage.setItem("apiKey", apiKey);
+
+    (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
+    (document.querySelector("#status a") as HTMLAnchorElement).innerText = url;
+    (document.querySelector("#status a") as HTMLAnchorElement).href = url;
+}
+
 store.url = window.localStorage.getItem("url");
 store.apiKey = window.localStorage.getItem("apiKey");
 
-if (store.url) {
-    (document.querySelector("#status") as HTMLElement).classList.remove("hidden");
-    (document.querySelector("#status a") as HTMLAnchorElement).innerText = store.url;
-    (document.querySelector("#status a") as HTMLAnchorElement).href = store.url;
+if (store.url && store.apiKey) {
+    updateSyncCredentials(store.url, store.apiKey);
 }
 
 export default store;
