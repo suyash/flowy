@@ -1,4 +1,4 @@
-import { allowRooting } from "../../root";
+import { makeRoot } from "../../root";
 import { Task as TaskInterface } from "../../store/interfaces";
 import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
@@ -41,8 +41,10 @@ export default class Task extends HTMLElement {
         header.appendChild(this.checkbox);
         header.appendChild(this.tasktext);
 
-        (this.querySelector("header > a:first-child") as HTMLElement).addEventListener("click", this.onLinkClick);
-        (this.querySelector("header > a:nth-child(2)") as HTMLElement).addEventListener("click", this.onTryResync);
+        (this.querySelector("header > a:nth-child(1)") as HTMLElement).addEventListener("click", this.onRoot);
+        (this.querySelector("header > a:nth-child(2)") as HTMLElement).addEventListener("click", this.onLinkClick);
+        (this.querySelector("header > a:nth-child(3)") as HTMLElement).addEventListener("click", this.onTryResync);
+
         this.tasktext.addEventListener("keypress", this.onKeyPress);
         this.tasktext.addEventListener("blur", this.updateTextCache);
         this.tasktext.addEventListener("focus", this.onFocusText);
@@ -249,6 +251,11 @@ export default class Task extends HTMLElement {
         }
     }
 
+    private onRoot = (e: Event): void => {
+        e.preventDefault();
+        makeRoot(this);
+    }
+
     private onLinkClick = (e: Event): void => {
         e.preventDefault();
         if (this.hasSubtasks) {
@@ -359,13 +366,11 @@ export default class Task extends HTMLElement {
             const newTask: TaskInterface = await store.create(parent.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtask(newTaskElement);
-            allowRooting(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         } else {
             const newTask: TaskInterface = await store.createBefore(parent.task, nextSibling.task);
             const newTaskElement: Task = new Task(newTask);
             parent.addSubtaskBefore(newTaskElement, nextSibling);
-            allowRooting(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         }
     }

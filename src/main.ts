@@ -1,5 +1,5 @@
 import TaskElement from "./components/task/task";
-import { allowRooting, init as initRoot } from "./root";
+import { init as initRoot } from "./root";
 import { Task } from "./store/interfaces";
 import store from "./store/store";
 
@@ -52,8 +52,6 @@ async function createElement(id: string): Promise<TaskElement> {
     const element: TaskElement = new TaskElement(task);
 
     const collapsed: boolean = task.collapsed;
-
-    allowRooting(element);
 
     const items: TaskElement[] = await Promise.all(
         task.children.map((cid: string): Promise<TaskElement> => createElement(cid)),

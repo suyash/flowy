@@ -3,23 +3,6 @@ import TaskElement from "./components/task/task";
 let root: TaskElement;
 let nav: HTMLElement;
 
-export function allowRooting(task: TaskElement): void {
-    let timeout: NodeJS.Timer;
-    let hasClick: boolean = false;
-    task.textElement.addEventListener("click", (): void => {
-        if (!hasClick) {
-            hasClick = true;
-            timeout = setTimeout(() => {
-                hasClick = false;
-            }, 200);
-        } else {
-            clearTimeout(timeout);
-            hasClick = false;
-            onDoubleClick(task);
-        }
-    });
-}
-
 function createNavLink(task: TaskElement): HTMLAnchorElement {
     const a: HTMLAnchorElement = document.createElement("a");
 
@@ -57,7 +40,7 @@ function onNavigationLinkClick(e: MouseEvent): void {
     }
 }
 
-function onDoubleClick(task: TaskElement): void {
+export function makeRoot(task: TaskElement): void {
     const links: HTMLAnchorElement[] = [];
 
     for (let p: TaskElement = task.parent() as TaskElement ; p !== root ; p = p.parent() as TaskElement) {

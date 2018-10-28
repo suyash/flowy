@@ -17,11 +17,10 @@
         color: inherit;
         border: 0;
         outline: 0;
-        opacity: 0.2;
         transition: all ease-in-out 0.05s;
     }
 
-    > a:first-child {
+    > a:nth-child(2) {
         display: block;
 
         &:before {
@@ -73,7 +72,23 @@ x-task {
     > header {
         display: none;
 
+        > a:first-child {
+            display: flex;
+            justify-content: center;
+            color: #45aaf2;
+
+            &:before {
+                content: "●";
+                font-size: 0.75rem;
+                margin-top: 0.05rem;
+            }
+        }
+
         > a:nth-child(2) {
+            opacity: 0.2;
+        }
+
+        > a:nth-child(3) {
             &:before {
                 content: "↺";
                 font-size: 0.9rem;
@@ -83,7 +98,7 @@ x-task {
 
     &[is-pinned] {
         > header {
-            > a:first-child {
+            > a:nth-child(2) {
                 opacity: 1;
             }
         }
@@ -91,7 +106,7 @@ x-task {
 
     &[checked] {
         > header {
-            > a:first-child {
+            > a:nth-child(2) {
                 opacity: 0;
                 pointer-events: none;
             }
@@ -100,7 +115,7 @@ x-task {
 
     &[has-subtasks] {
         > header {
-            > a:first-child {
+            > a:nth-child(2) {
                 opacity: 1;
 
                 &:before {
@@ -112,7 +127,7 @@ x-task {
 
         &[expanded] {
             > header {
-                > a:first-child:before {
+                > a:nth-child(2):before {
                     content: "－";
                     font-size: 1rem;
                 }
@@ -121,7 +136,7 @@ x-task {
 
         &[checked] {
             > header {
-                > a:first-child {
+                > a:nth-child(2) {
                     pointer-events: auto;
                 }
             }
@@ -142,6 +157,10 @@ x-task {
             text-align: center;
 
             a:first-child {
+                display: none;
+            }
+
+            a:nth-child(2) {
                 display: none;
             }
 
@@ -187,7 +206,7 @@ x-task {
 
     &[unsynced] {
         > header {
-            > a:nth-child(2) {
+            > a:nth-child(3) {
                 display: block;
             }
         }
