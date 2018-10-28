@@ -44,6 +44,7 @@
         min-height: 1.5rem;
 
         @media screen and (max-width: 576px) {
+            width: 100%;
             white-space: nowrap;
             word-break: keep-all;
         }
