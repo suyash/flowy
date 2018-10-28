@@ -107,8 +107,7 @@ x-task {
     &[checked] {
         > header {
             > a:nth-child(2) {
-                opacity: 0;
-                pointer-events: none;
+                display: none;
             }
         }
     }
@@ -116,6 +115,7 @@ x-task {
     &[has-subtasks] {
         > header {
             > a:nth-child(2) {
+                display: block;
                 opacity: 1;
 
                 &:before {

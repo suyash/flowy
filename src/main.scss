@@ -125,13 +125,10 @@ main {
 }
 
 #pins {
-    width: 100%;
     margin-top: 2rem;
 
-    @media screen and (min-width: 576px) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    @media screen and (max-width: 576px) {
+        width: 100%;
     }
 
     x-pin:last-child {
@@ -140,12 +137,8 @@ main {
 }
 
 #work {
-    width: 100%;
-
-    @media screen and (min-width: 576px) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    @media screen and (max-width: 576px) {
+        width: 100%;
     }
 
     nav {

@@ -27,7 +27,8 @@ export default class Pin extends HTMLElement {
         header.appendChild(this.checkbox);
         header.appendChild(this.tasktext);
 
-        (this.querySelector("header > a") as HTMLElement).addEventListener("click", this.onLinkClick);
+        (this.querySelector("header > a:nth-child(2)") as HTMLElement).addEventListener("click", this.onLinkClick);
+
         this.tasktext.addEventListener("keypress", this.onKeyPress);
         this.tasktext.addEventListener("keyup", this.onKeyUp);
         this.checkbox.addEventListener("change", this.onStatusChange);
