@@ -1,3 +1,10 @@
+v0.1.7 / 2018-10-28
+===================
+
+  * 0.1.7
+  * <x-task>: fix bullet size for small screens
+  * <x-task>, <x-pin>: hide pin for checked items
+  * update changelog
 
 v0.1.6 / 2018-10-28
 ==================
