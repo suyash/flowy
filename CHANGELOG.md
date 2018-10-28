@@ -1,8 +1,10 @@
+v0.1.4 / 2018-10-28
+===================
 
-n.n.n / 2018-10-26
-==================
-
-
+  * 0.1.4
+  * nav: fix overflow
+  * <x-task>, <x-pin>: expand to fill available space and fix pin location overflow
+  * add CHANGELOG
 
 v0.1.3 / 2018-10-25
 ===================
