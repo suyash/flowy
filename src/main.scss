@@ -135,11 +135,18 @@ main {
 #work {
     width: 100%;
 
+    @media screen and (min-width: 576px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     nav {
         display: flex;
-        justify-content: center;
+        flex-wrap: wrap;
         font-size: 1rem;
-        line-height: 2.5rem;
+        line-height: 1.5rem;
+        padding-bottom: 1rem;
 
         a {
             max-width: 8rem;
@@ -150,7 +157,7 @@ main {
             white-space: nowrap;
             text-overflow: ellipsis;
 
-            padding-left: 1rem;
+            padding-right: 1rem;
 
             &:before {
                 content: "›";
@@ -158,16 +165,26 @@ main {
             }
 
             &:first-child {
-                padding-left: 0;
-
                 &:before {
                     content: "";
                     padding-right: 0;
                 }
             }
 
+            &:last-child {
+                padding-right: 0;
+            }
+
             &:hover {
                 text-decoration: underline;
+            }
+
+            @media screen and (max-width: 576px) {
+                padding-right: 0.5rem;
+
+                &:before {
+                    padding-right: 0.5rem;
+                }
             }
         }
     }
