@@ -1,3 +1,16 @@
+v0.1.9 / 2018-10-28
+===================
+
+  * 0.1.9
+  * <x-task>: fix handling of very long text fields
+
+v0.1.8 / 2018-10-28
+===================
+
+  * 0.1.8
+  * main: fix overflow on phone
+  * update changelog
+
 v0.1.7 / 2018-10-28
 ===================
 
