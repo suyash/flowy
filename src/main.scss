@@ -137,6 +137,8 @@ main {
 }
 
 #work {
+    max-width: 100%;
+
     @media screen and (max-width: 576px) {
         width: 100%;
     }

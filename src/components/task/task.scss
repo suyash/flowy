@@ -41,6 +41,7 @@
         word-break: break-all;
         line-height: 1.5rem;
         min-height: 1.5rem;
+        padding-right: 1rem;
 
         @media screen and (max-width: 576px) {
             width: 100%;
@@ -57,6 +58,7 @@
 x-task {
     display: flex;
     font-size: 1rem;
+    min-width: 8rem;
 
     header {
         @extend %taskheader;
@@ -66,7 +68,6 @@ x-task {
         display: none;
         flex-direction: column;
         margin-left: 2rem;
-        overflow: hidden;
     }
 
     > header {
