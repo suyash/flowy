@@ -41,12 +41,13 @@
         word-break: break-all;
         line-height: 1.5rem;
         min-height: 1.5rem;
-        padding-right: 1rem;
+        width: 100%;
+        min-width: 2rem;
 
         @media screen and (max-width: 576px) {
-            width: 100%;
             white-space: nowrap;
             word-break: keep-all;
+            padding-right: 1rem;
         }
     }
 
@@ -85,6 +86,7 @@ x-task {
 
                 @media screen and (max-width: 576px) {
                     font-size: 1.25rem;
+                    margin-top: -0.25rem;
                 }
             }
         }
