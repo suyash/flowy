@@ -58,6 +58,7 @@
 
 x-task {
     display: flex;
+    flex-direction: column;
     font-size: 1rem;
     min-width: 8rem;
 
@@ -181,6 +182,12 @@ x-task {
                 line-height: 4rem;
                 text-align: center;
                 padding-right: 0;
+
+                @media screen and (max-width: 576px) {
+                    white-space: pre-wrap;
+                    word-break: break-all;
+                    padding-right: 0.5rem;
+                }
             }
         }
 
@@ -197,7 +204,7 @@ x-task {
         }
 
         x-task {
-            display: block;
+            display: flex;
         }
     }
 
