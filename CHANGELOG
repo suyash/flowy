@@ -1,3 +1,10 @@
+v0.1.11 / 2018-10-29
+====================
+
+  * 0.1.11
+  * <x-task>: fix header and content trimming on small screens
+  * update changelog
+
 v0.1.10 / 2018-10-29
 ====================
 
