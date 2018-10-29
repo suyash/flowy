@@ -54,7 +54,26 @@ const taskStore: IDBTaskStore = {
     async initialize(): Promise<Task> {
         const root: Task = { id: "root", text: " ", checked: false, pinned: false, collapsed: false, children: [] };
         await set("root", root, this.store);
-        await this.create(root, "first item");
+
+        await this.create(root, "This is flowy, a small WorkFlowy clone");
+        const l1: Task = await this.create(root, "It allows you to organize your life into lists");
+
+        const l2: Task = await this.create(l1, "Lists can have sublists");
+
+        await this.create(l2, "and they can have sublists");
+        const l3: Task = await this.create(l2, "Once an item is finished, it can be marked completed");
+        l3.checked = true;
+        await this.update(l3);
+        const l4: Task = await this.create(l2, "Important Nested items can be pinned on top for direct attention");
+        l4.pinned = true;
+        await this.update(l4);
+
+        // tslint:disable-next-line:max-line-length
+        await this.create(root, "It works out of the box in the browser, and optionally allows you to plug in a storage server to back tasks up.");
+        await this.create(root, "It also works offline.");
+        await this.create(root, "For more details on different features, open the hamburger menu on the top left.");
+        await this.create(root, "The app is open source at https://github.com/suyash/flowy, file any issues there.");
+
         return root;
     },
 };
