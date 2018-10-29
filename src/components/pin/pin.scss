@@ -1,6 +1,8 @@
 @import "../task/task.scss";
 
 x-pin {
+    min-width: 8rem;
+
     header {
         @extend %taskheader;
     }

@@ -12,6 +12,7 @@ export interface CombinedTaskStore extends TaskStore {
 interface CombinedPrivateTaskStore extends CombinedTaskStore {
     _updateLocal(task: Task): Promise<void>;
     _updateRemoteSingle(task: Task): Promise<void>;
+    _removeRemoteSingle(task: Task): Promise<void>;
     _updateRemote(task: Task): Promise<void>;
 }
 
@@ -37,7 +38,7 @@ const store: CombinedPrivateTaskStore = {
             return;
         }
 
-        await this._updateRemoteSingle(task);
+        this._updateRemoteSingle(task);
     },
 
     async _updateRemoteSingle(task: Task): Promise<void> {
@@ -68,6 +69,10 @@ const store: CombinedPrivateTaskStore = {
             return;
         }
 
+        this._removeRemoteSingle(task);
+    },
+
+    async _removeRemoteSingle(task: Task): Promise<void> {
         const item: TaskElement = document.getElementById(task.id) as TaskElement;
         if (item) {
             item.unsynced = true;
