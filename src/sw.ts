@@ -7,7 +7,9 @@ const PRECACHE_URLS: string[] = [
 ];
 
 self.addEventListener("install", (event: any): void => {
-    event.waitUntil(precache().then(() => (self as any).skipWaiting()));
+    event.waitUntil(precache().then(() => {
+        (self as any).skipWaiting();
+    }));
 });
 
 async function precache(): Promise<void> {
@@ -34,6 +36,7 @@ async function removeUnusedCaches(): Promise<void> {
     const cacheNames: string[] = await caches.keys();
     const cacheNamesToRemove: string[] = cacheNames.filter((cacheName: string) => cacheName !== `v${VERSION}`);
     await Promise.all(cacheNamesToRemove.map((cacheName: string): Promise<boolean> => caches.delete(cacheName)));
+    (self as any).clients.claim();
 }
 
 self.addEventListener("fetch", (event: any) => {
