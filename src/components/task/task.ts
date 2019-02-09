@@ -45,7 +45,9 @@ export default class Task extends HTMLElement {
         (this.querySelector("header > a:nth-child(2)") as HTMLElement).addEventListener("click", this.onLinkClick);
         (this.querySelector("header > a:nth-child(3)") as HTMLElement).addEventListener("click", this.onTryResync);
 
-        this.tasktext.addEventListener("keypress", this.onKeyPress);
+        // keypress does not detect tab, backspace and some other keys
+        this.tasktext.addEventListener("keydown", this.onKeyPress);
+
         this.tasktext.addEventListener("blur", this.updateTextCache);
         this.tasktext.addEventListener("focus", this.onFocusText);
 
