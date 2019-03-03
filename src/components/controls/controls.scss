@@ -76,6 +76,10 @@ x-controls {
         margin-top: 0.5rem;
         margin-right: 0.5rem;
 
+        x-checkbox {
+            pointer-events: none;
+        }
+
         .unchecked {
             border-color: #222;
         }
