@@ -2,20 +2,23 @@ import { makeRoot } from "../../root";
 import { Task as TaskInterface } from "../../store/interfaces";
 import store from "../../store/store";
 import Checkbox from "../checkbox/checkbox";
+import Controls from "../controls/controls";
 import Pin from "../pin/pin";
 
 const FOCUS_SAVE_INTERVAL: number = 5000;
 
 export default class Task extends HTMLElement {
+    private controls: Controls;
     private task: TaskInterface;
     private checkbox: Checkbox;
     private tasktext: HTMLSpanElement;
     private subtasks: HTMLElement;
 
-    constructor(task: TaskInterface) {
+    constructor(task: TaskInterface, controls: Controls) {
         super();
 
         this.task = task;
+        this.controls = controls;
 
         const template: HTMLTemplateElement = document.querySelector("#task") as HTMLTemplateElement;
         const node: DocumentFragment = document.importNode(template.content, true);
@@ -218,6 +221,33 @@ export default class Task extends HTMLElement {
         await store.update(this.task);
     }
 
+    public isShiftable(): boolean {
+        if (this.hasAttribute("root")) {
+            return false;
+        }
+
+        const prevSibling: Task|null = this.previousSibling as Task|null;
+        if (!prevSibling) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public isUnshiftable(): boolean {
+        if (this.hasAttribute("root")) {
+            return false;
+        }
+
+        const parent: Task = this.parent() as Task;
+        const grandParent: Task = parent.parent() as Task;
+        if (!grandParent || !(grandParent instanceof Task)) {
+            return false;
+        }
+
+        return true;
+    }
+
     private onCheckboxChange = async (e: Event): Promise<void> => {
         const newValue: boolean = (e.target as HTMLInputElement).checked;
         if (newValue !== this.checked) {
@@ -366,12 +396,12 @@ export default class Task extends HTMLElement {
 
         if (!nextSibling) {
             const newTask: TaskInterface = await store.create(parent.task);
-            const newTaskElement: Task = new Task(newTask);
+            const newTaskElement: Task = new Task(newTask, this.controls);
             parent.addSubtask(newTaskElement);
             (newTaskElement.tasktext as HTMLElement).focus();
         } else {
             const newTask: TaskInterface = await store.createBefore(parent.task, nextSibling.task);
-            const newTaskElement: Task = new Task(newTask);
+            const newTaskElement: Task = new Task(newTask, this.controls);
             parent.addSubtaskBefore(newTaskElement, nextSibling);
             (newTaskElement.tasktext as HTMLElement).focus();
         }
@@ -440,6 +470,8 @@ export default class Task extends HTMLElement {
         } else {
             await this.drop();
         }
+
+        this.controls.removeCurrentTask(this);
     }
 
     private onFocusText = (): void => {
@@ -453,12 +485,10 @@ export default class Task extends HTMLElement {
                 await store.update(this.task);
             }
 
-            if (this.tasktext === document.activeElement) {
-                this.onFocusText();
-            }
+            setTimeout(update, FOCUS_SAVE_INTERVAL);
         };
 
-        setTimeout(update, FOCUS_SAVE_INTERVAL);
+        this.controls.setCurrentTask(this);
     }
 
     private moveUp = async (): Promise<void> => {

@@ -1,0 +1,92 @@
+x-controls {
+    position: fixed;
+    width: 100%;
+    bottom: 5px;
+    display: flex;
+    border-width: 1px 0 1px 0;
+    border-style: solid;
+    border-color: #333;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+    z-index: 1000000;
+    max-height: 3rem;
+
+    section {
+        display: flex;
+    }
+
+    #leftControls {
+        margin-left: 0.5rem;
+    }
+
+    #rightControls {
+        margin-left: auto;
+        margin-right: 0.5rem;
+    }
+
+    a {
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+
+        svg {
+        }
+    }
+
+    #outdent {
+        svg {
+            width: 2rem;
+            margin: 0.45rem 1rem 0 1rem;
+
+            path {
+                fill: #aaaaaa;
+            }
+        }
+
+        &.active {
+            svg {
+                path {
+                    fill: #222;
+                }
+            }
+        }
+    }
+
+    #indent {
+        svg {
+            width: 2rem;
+            margin: 0.45rem 1rem 0 1rem;
+
+            path {
+                fill: #aaaaaa;
+            }
+        }
+
+        &.active {
+            svg {
+                path {
+                    fill: #222;
+                }
+            }
+        }
+    }
+
+    #toggleCheck {
+        margin-top: 0.5rem;
+        margin-right: 0.5rem;
+
+        .unchecked {
+            border-color: #222;
+        }
+
+        .checked {
+            svg {
+                path {
+                    stroke-width: 3px;
+                    stroke: #222;
+                }
+            }
+        }
+    }
+}

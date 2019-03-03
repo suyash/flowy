@@ -1,3 +1,4 @@
+import ControlsElement from "./components/controls/controls";
 import TaskElement from "./components/task/task";
 import { init as initRoot } from "./root";
 import { Task } from "./store/interfaces";
@@ -10,7 +11,10 @@ export default async function main(): Promise<void> {
         await store.initialize();
     }
 
-    let rootElement: TaskElement = await createElement("root");
+    const controls: ControlsElement = new ControlsElement();
+    (document.querySelector("main") as HTMLElement).appendChild(controls);
+
+    let rootElement: TaskElement = await createElement("root", controls);
     reroot(rootElement);
 
     (document.querySelector("aside > a") as HTMLAnchorElement).addEventListener("click", onInfoLinkClick);
@@ -30,7 +34,7 @@ export default async function main(): Promise<void> {
         if (resyncLocal) {
             await store.resyncLocal(url, apiKey);
             rootElement.remove();
-            rootElement = await createElement("root");
+            rootElement = await createElement("root", controls);
             reroot(rootElement);
         } else {
             await store.resyncRemote(url, apiKey);
@@ -47,14 +51,14 @@ function reroot(root: TaskElement): void {
     (document.querySelector("#work") as HTMLElement).appendChild(root);
 }
 
-async function createElement(id: string): Promise<TaskElement> {
+async function createElement(id: string, controls: ControlsElement): Promise<TaskElement> {
     const task: Task = await store.task(id) as Task;
-    const element: TaskElement = new TaskElement(task);
+    const element: TaskElement = new TaskElement(task, controls);
 
     const collapsed: boolean = task.collapsed;
 
     const items: TaskElement[] = await Promise.all(
-        task.children.map((cid: string): Promise<TaskElement> => createElement(cid)),
+        task.children.map((cid: string): Promise<TaskElement> => createElement(cid, controls)),
     );
 
     for (const item of items) {
