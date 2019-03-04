@@ -130,9 +130,11 @@ export default class Controls extends HTMLElement {
         }
     }
 
-    private onToggleCheck = async (): Promise<void> => {
+    private onToggleCheck = async (e: Event): Promise<void> => {
+        e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.toggleChecked();
+            this.toggleCheckCheckbox.checked = !this.toggleCheckCheckbox.checked;
         }
     }
 }
