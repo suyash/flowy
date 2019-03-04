@@ -14,6 +14,15 @@ export default async function main(): Promise<void> {
     const controls: ControlsElement = new ControlsElement();
     (document.querySelector("main") as HTMLElement).appendChild(controls);
 
+    const height: number = window.innerHeight;
+    window.addEventListener("resize", (): void => {
+        if (window.innerHeight < height) {
+            controls.show();
+        } else {
+            controls.hide();
+        }
+    });
+
     let rootElement: TaskElement = await createElement("root", controls);
     reroot(rootElement);
 

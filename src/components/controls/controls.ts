@@ -40,6 +40,16 @@ export default class Controls extends HTMLElement {
         this.indent.addEventListener("touchstart", this.onIndent);
         this.outdent.addEventListener("touchstart", this.onOutdent);
         this.toggleCheckCheckbox.addEventListener("touchstart", this.onToggleCheck, true);
+
+        this.hide();
+    }
+
+    public show(): void {
+        this.style.display = "flex";
+    }
+
+    public hide(): void {
+        this.style.display = "none";
     }
 
     /**
