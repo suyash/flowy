@@ -23,14 +23,8 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 2rem 2rem 2rem;
-
-    @media screen and (min-width: 720px) {
-        padding: 0 6rem 2rem 6rem;
-    }
 
     @media screen and (max-width: 576px) {
-        padding: 0 0 2rem 2rem;
         align-items: start;
     }
 
@@ -126,9 +120,15 @@ main {
 }
 
 #pins {
-    margin-top: 2rem;
+    margin: 2rem 2rem 0 2rem;
+
+    @media screen and (min-width: 720px) {
+        margin-right: 6rem;
+        margin-left: 6rem;
+    }
 
     @media screen and (max-width: 576px) {
+        margin-right: 0;
         width: 100%;
     }
 
@@ -139,8 +139,14 @@ main {
 
 #work {
     max-width: 100%;
+    margin: 0 2rem 2rem 2rem;
+
+    @media screen and (min-width: 576px) {
+        margin: 0 6rem 2rem 6rem;
+    }
 
     @media screen and (max-width: 576px) {
+        margin: 0 0 2rem 2rem;
         width: 100%;
     }
 
