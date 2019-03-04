@@ -17,8 +17,10 @@ export default async function main(): Promise<void> {
     const height: number = window.innerHeight;
     window.addEventListener("resize", (): void => {
         if (window.innerHeight < height) {
+            (document.querySelector("main") as HTMLElement).classList.add("withControls");
             controls.show();
         } else {
+            (document.querySelector("main") as HTMLElement).classList.remove("withControls");
             controls.hide();
         }
     });

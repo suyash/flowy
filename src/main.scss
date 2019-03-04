@@ -29,6 +29,10 @@ main {
         align-items: start;
     }
 
+    &.withControls {
+        margin-bottom: 3rem;
+    }
+
     hr {
         border: 0.1rem solid #27ae60;
         width: 90%;
