@@ -234,6 +234,29 @@ export default class Task extends HTMLElement {
         return true;
     }
 
+    public async shift(): Promise<void> {
+        if (this.hasAttribute("root")) {
+            return;
+        }
+
+        const prevSibling: Task|null = this.previousSibling as Task|null;
+        if (!prevSibling) {
+            return;
+        }
+
+        const pos: number = this.getCursorPosition();
+
+        const parent: Task = this.parent() as Task;
+        parent.removeSubtask(this.task.id);
+
+        prevSibling.task.children.push(this.task.id);
+        await store.update(prevSibling.task);
+
+        prevSibling.addSubtask(this);
+        this.tasktext.focus();
+        this.setCursorPosition(pos);
+    }
+
     public isUnshiftable(): boolean {
         if (this.hasAttribute("root")) {
             return false;
@@ -246,6 +269,39 @@ export default class Task extends HTMLElement {
         }
 
         return true;
+    }
+
+    public async unshift(): Promise<void> {
+        if (this.hasAttribute("root")) {
+            return;
+        }
+
+        const parent: Task = this.parent() as Task;
+        const grandParent: Task = parent.parent() as Task;
+        if (!grandParent || !(grandParent instanceof Task)) {
+            return;
+        }
+
+        const pos: number = this.getCursorPosition();
+
+        const nextSibling: Task = parent.nextSibling as Task;
+
+        if (!nextSibling) {
+            grandParent.task.children.push(this.id);
+            grandParent.addSubtask(this);
+        } else {
+            const idx: number = grandParent.task.children.indexOf(nextSibling.id);
+            grandParent.task.children.splice(idx, 0, this.id);
+            grandParent.addSubtaskBefore(this, nextSibling);
+        }
+
+        await Promise.all([
+            parent.removeSubtask(this.task.id),
+            store.update(grandParent.task),
+        ]);
+
+        this.tasktext.focus();
+        this.setCursorPosition(pos);
     }
 
     private onCheckboxChange = async (e: Event): Promise<void> => {
@@ -405,62 +461,6 @@ export default class Task extends HTMLElement {
             parent.addSubtaskBefore(newTaskElement, nextSibling);
             (newTaskElement.tasktext as HTMLElement).focus();
         }
-    }
-
-    private shift = async (): Promise<void> => {
-        if (this.hasAttribute("root")) {
-            return;
-        }
-
-        const prevSibling: Task|null = this.previousSibling as Task|null;
-        if (!prevSibling) {
-            return;
-        }
-
-        const pos: number = this.getCursorPosition();
-
-        const parent: Task = this.parent() as Task;
-        parent.removeSubtask(this.task.id);
-
-        prevSibling.task.children.push(this.task.id);
-        await store.update(prevSibling.task);
-
-        prevSibling.addSubtask(this);
-        this.tasktext.focus();
-        this.setCursorPosition(pos);
-    }
-
-    private unshift = async (): Promise<void> => {
-        if (this.hasAttribute("root")) {
-            return;
-        }
-
-        const parent: Task = this.parent() as Task;
-        const grandParent: Task = parent.parent() as Task;
-        if (!grandParent || !(grandParent instanceof Task)) {
-            return;
-        }
-
-        const pos: number = this.getCursorPosition();
-
-        const nextSibling: Task = parent.nextSibling as Task;
-
-        if (!nextSibling) {
-            grandParent.task.children.push(this.id);
-            grandParent.addSubtask(this);
-        } else {
-            const idx: number = grandParent.task.children.indexOf(nextSibling.id);
-            grandParent.task.children.splice(idx, 0, this.id);
-            grandParent.addSubtaskBefore(this, nextSibling);
-        }
-
-        await Promise.all([
-            parent.removeSubtask(this.task.id),
-            store.update(grandParent.task),
-        ]);
-
-        this.tasktext.focus();
-        this.setCursorPosition(pos);
     }
 
     private updateTextCache = async (): Promise<void> => {

@@ -9,11 +9,14 @@ import Task from "../task/task";
  * - enable/disable controls
  * - set themselves as the active task
  *
- * On user interaction, the controls element will fire custom events on the
+ * On user interaction, the controls element will invoke methods on the
  * currently active task.
  */
 export default class Controls extends HTMLElement {
     private currentTask: Task|null;
+    private indent: HTMLElement;
+    private outdent: HTMLElement;
+    private toggleCheck: HTMLElement;
     private toggleCheckCheckbox: Checkbox;
 
     constructor() {
@@ -28,7 +31,15 @@ export default class Controls extends HTMLElement {
 
         this.appendChild(node);
 
+        this.indent = this.querySelector("#indent") as HTMLElement;
+        this.outdent = this.querySelector("#outdent") as HTMLElement;
+        this.toggleCheck = this.querySelector("#toggleCheck") as HTMLElement;
+
         this.currentTask = null;
+
+        this.indent.addEventListener("touchstart", this.onIndent);
+        this.outdent.addEventListener("touchstart", this.onOutdent);
+        this.toggleCheckCheckbox.addEventListener("touchstart", this.onToggleCheck, true);
     }
 
     /**
@@ -39,7 +50,7 @@ export default class Controls extends HTMLElement {
         this.currentTask = task;
         this.setIndentState(task.isShiftable());
         this.setOutdentState(task.isUnshiftable());
-        this.setCheckboxState(!task.checked);
+        this.setCheckboxState(true, !task.checked);
     }
 
     /**
@@ -50,7 +61,6 @@ export default class Controls extends HTMLElement {
     public removeCurrentTask(task: Task): void {
         if (this.currentTask === task) {
             this.currentTask = null;
-
             this.setOutdentState(false);
             this.setIndentState(false);
             this.setCheckboxState(false);
@@ -62,9 +72,9 @@ export default class Controls extends HTMLElement {
      */
     private setIndentState(state: boolean): void {
         if (state) {
-            (this.querySelector("#indent") as HTMLElement).classList.add("active");
+            this.indent.classList.add("active");
         } else {
-            (this.querySelector("#indent") as HTMLElement).classList.remove("active");
+            this.indent.classList.remove("active");
         }
     }
 
@@ -73,17 +83,48 @@ export default class Controls extends HTMLElement {
      */
     private setOutdentState(state: boolean): void {
         if (state) {
-            (this.querySelector("#outdent") as HTMLElement).classList.add("active");
+            this.outdent.classList.add("active");
         } else {
-            (this.querySelector("#outdent") as HTMLElement).classList.remove("active");
+            this.outdent.classList.remove("active");
         }
     }
 
     /**
-     * setcheckboxState
+     * setCheckboxState
      */
-    private setCheckboxState(state: boolean): void {
-        this.toggleCheckCheckbox.checked = state;
+    private setCheckboxState(state: boolean, value: boolean = false): void {
+        if (state) {
+            this.toggleCheck.classList.add("active");
+        } else {
+            this.toggleCheck.classList.remove("active");
+        }
+
+        this.toggleCheckCheckbox.checked = value;
+    }
+
+    /**
+     * onIndent
+     * @param e MouseEvent
+     */
+    private onIndent = (e: Event): void => {
+        e.preventDefault();
+        if (this.currentTask) {
+            this.currentTask.shift();
+        }
+    }
+
+    private onOutdent = (e: Event): void => {
+        e.preventDefault();
+        if (this.currentTask) {
+            this.currentTask.unshift();
+        }
+    }
+
+    private onToggleCheck = async (e: Event): Promise<void> => {
+        e.preventDefault();
+        if (this.currentTask) {
+            await this.currentTask.toggleChecked();
+        }
     }
 }
 
