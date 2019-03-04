@@ -73,7 +73,6 @@ export default class Controls extends HTMLElement {
             this.currentTask = null;
             this.setOutdentState(false);
             this.setIndentState(false);
-            this.setCheckboxState(false);
         }
     }
 
