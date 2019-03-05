@@ -84,11 +84,6 @@ x-task {
                 content: "●";
                 font-size: 0.75rem;
                 margin-top: 0.05rem;
-
-                @media screen and (max-width: 576px) {
-                    font-size: 1.25rem;
-                    margin-top: -0.25rem;
-                }
             }
         }
 
