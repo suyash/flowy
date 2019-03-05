@@ -304,6 +304,100 @@ export default class Task extends HTMLElement {
         this.setCursorPosition(pos);
     }
 
+    public isMovableUpwards(): boolean {
+        const element: Task|null = this.previousSibling as Task|null;
+        if (!element) {
+            return false;
+        }
+
+        const parent: Task|null = this.parent();
+        if (!parent) {
+            return false;
+        }
+
+        if (this.root) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async moveUp(): Promise<void> {
+        const element: Task|null = this.previousSibling as Task|null;
+        if (!element) {
+            return;
+        }
+
+        const parent: Task|null = this.parent();
+        if (!parent) {
+            return;
+        }
+
+        if (this.root) {
+            return;
+        }
+
+        const cursor: number = this.getCursorPosition();
+
+        const idx: number = parent.task.children.indexOf(element.id);
+        parent.task.children[idx] = this.id;
+        parent.task.children[idx + 1] = element.id;
+
+        parent.addSubtaskBefore(this, element);
+
+        this.tasktext.focus();
+        this.setCursorPosition(cursor);
+
+        await store.update(parent.task);
+    }
+
+    public isMovableDownwards(): boolean {
+        const element: Task|null = this.nextSibling as Task|null;
+        if (!element) {
+            return false;
+        }
+
+        const parent: Task|null = this.parent();
+        if (!parent) {
+            return false;
+        }
+
+        if (this.root) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async moveDown(): Promise<void> {
+        const element: Task|null = this.nextSibling as Task|null;
+        if (!element) {
+            return;
+        }
+
+        const parent: Task|null = this.parent();
+        if (!parent) {
+            return;
+        }
+
+        if (this.root) {
+            return;
+        }
+
+        const cursor: number = this.getCursorPosition();
+
+        const idx: number = parent.task.children.indexOf(element.id);
+        parent.task.children[idx] = this.id;
+        parent.task.children[idx - 1] = element.id;
+
+        parent.addSubtaskAfter(this, element);
+
+        this.tasktext.focus();
+        this.setCursorPosition(cursor);
+
+        await store.update(parent.task);
+    }
+
     private onCheckboxChange = async (e: Event): Promise<void> => {
         const newValue: boolean = (e.target as HTMLInputElement).checked;
         if (newValue !== this.checked) {
@@ -489,56 +583,6 @@ export default class Task extends HTMLElement {
         };
 
         this.controls.setCurrentTask(this);
-    }
-
-    private moveUp = async (): Promise<void> => {
-        const element: Task|null = this.previousSibling as Task|null;
-        if (!element) {
-            return;
-        }
-
-        const parent: Task|null = this.parent();
-        if (!parent) {
-            return;
-        }
-
-        const cursor: number = this.getCursorPosition();
-
-        const idx: number = parent.task.children.indexOf(element.id);
-        parent.task.children[idx] = this.id;
-        parent.task.children[idx + 1] = element.id;
-
-        parent.addSubtaskBefore(this, element);
-
-        this.tasktext.focus();
-        this.setCursorPosition(cursor);
-
-        await store.update(parent.task);
-    }
-
-    private moveDown = async (): Promise<void> => {
-        const element: Task|null = this.nextSibling as Task|null;
-        if (!element) {
-            return;
-        }
-
-        const parent: Task|null = this.parent();
-        if (!parent) {
-            return;
-        }
-
-        const cursor: number = this.getCursorPosition();
-
-        const idx: number = parent.task.children.indexOf(element.id);
-        parent.task.children[idx] = this.id;
-        parent.task.children[idx - 1] = element.id;
-
-        parent.addSubtaskAfter(this, element);
-
-        this.tasktext.focus();
-        this.setCursorPosition(cursor);
-
-        await store.update(parent.task);
     }
 
     private moveFocusUp = async (): Promise<void> => {

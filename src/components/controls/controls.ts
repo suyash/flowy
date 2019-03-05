@@ -16,6 +16,8 @@ export default class Controls extends HTMLElement {
     private currentTask: Task|null;
     private indent: HTMLElement;
     private outdent: HTMLElement;
+    private moveUp: HTMLElement;
+    private moveDown: HTMLElement;
     private toggleCheck: HTMLElement;
     private toggleCheckCheckbox: Checkbox;
 
@@ -33,12 +35,16 @@ export default class Controls extends HTMLElement {
 
         this.indent = this.querySelector("#indent") as HTMLElement;
         this.outdent = this.querySelector("#outdent") as HTMLElement;
+        this.moveUp = this.querySelector("#moveUp") as HTMLElement;
+        this.moveDown = this.querySelector("#moveDown") as HTMLElement;
         this.toggleCheck = this.querySelector("#toggleCheck") as HTMLElement;
 
         this.currentTask = null;
 
         this.indent.addEventListener("touchstart", this.onIndent);
         this.outdent.addEventListener("touchstart", this.onOutdent);
+        this.moveUp.addEventListener("touchstart", this.onMoveUp);
+        this.moveDown.addEventListener("touchstart", this.onMoveDown);
         this.toggleCheckCheckbox.addEventListener("touchstart", this.onToggleCheck, true);
 
         this.hide();
@@ -60,6 +66,8 @@ export default class Controls extends HTMLElement {
         this.currentTask = task;
         this.setIndentState(task.isShiftable());
         this.setOutdentState(task.isUnshiftable());
+        this.setMoveDownState(task.isMovableDownwards());
+        this.setMoveUpState(task.isMovableUpwards());
         this.setCheckboxState(true, !task.checked);
     }
 
@@ -73,6 +81,8 @@ export default class Controls extends HTMLElement {
             this.currentTask = null;
             this.setOutdentState(false);
             this.setIndentState(false);
+            this.setMoveDownState(false);
+            this.setMoveUpState(false);
         }
     }
 
@@ -99,6 +109,30 @@ export default class Controls extends HTMLElement {
     }
 
     /**
+     * setMoveUpState
+     * @param state boolean
+     */
+    private setMoveUpState(state: boolean): void {
+        if (state) {
+            this.moveUp.classList.add("active");
+        } else {
+            this.moveUp.classList.remove("active");
+        }
+    }
+
+    /**
+     * setMoveDownState
+     * @param state boolean
+     */
+    private setMoveDownState(state: boolean): void {
+        if (state) {
+            this.moveDown.classList.add("active");
+        } else {
+            this.moveDown.classList.remove("active");
+        }
+    }
+
+    /**
      * setCheckboxState
      */
     private setCheckboxState(state: boolean, value: boolean = false): void {
@@ -113,23 +147,53 @@ export default class Controls extends HTMLElement {
 
     /**
      * onIndent
-     * @param e MouseEvent
+     * @param e TouchEvent
      */
-    private onIndent = (e: Event): void => {
+    private onIndent = async (e: TouchEvent): Promise<void> => {
         e.preventDefault();
         if (this.currentTask) {
-            this.currentTask.shift();
+            await this.currentTask.shift();
         }
     }
 
-    private onOutdent = (e: Event): void => {
+    /**
+     * onOutdent
+     * @param e TouchEvent
+     */
+    private onOutdent = async (e: TouchEvent): Promise<void> => {
         e.preventDefault();
         if (this.currentTask) {
-            this.currentTask.unshift();
+            await this.currentTask.unshift();
         }
     }
 
-    private onToggleCheck = async (e: Event): Promise<void> => {
+    /**
+     * onMoveUp
+     * @param e TouchEvent
+     */
+    private onMoveUp = async (e: TouchEvent): Promise<void> => {
+        e.preventDefault();
+        if (this.currentTask) {
+            await this.currentTask.moveUp();
+        }
+    }
+
+    /**
+     * onMoveDown
+     * @param e TouchEvent
+     */
+    private onMoveDown = async (e: TouchEvent): Promise<void> => {
+        e.preventDefault();
+        if (this.currentTask) {
+            await this.currentTask.moveDown();
+        }
+    }
+
+    /**
+     * onToggleCheck
+     * @param e TouchEvent
+     */
+    private onToggleCheck = async (e: TouchEvent): Promise<void> => {
         e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.toggleChecked();

@@ -19,7 +19,6 @@ x-controls {
 
     #rightControls {
         margin-left: auto;
-        margin-right: 0.5rem;
     }
 
     a {
@@ -28,7 +27,7 @@ x-controls {
         justify-content: center;
         pointer-events: none;
         cursor: default;
-        max-width: 4rem;
+        width: 3.5rem;
 
         &.active {
             pointer-events: all;
@@ -68,9 +67,40 @@ x-controls {
         }
     }
 
+    #moveUp {
+        svg {
+            g {
+                fill: #aaaaaa;
+            }
+        }
+
+        &.active {
+            svg {
+                g {
+                    fill: #222;
+                }
+            }
+        }
+    }
+
+    #moveDown {
+        svg {
+            g {
+                fill: #aaaaaa;
+            }
+        }
+
+        &.active {
+            svg {
+                g {
+                    fill: #222;
+                }
+            }
+        }
+    }
+
     #toggleCheck {
         margin-top: 0.7rem;
-        margin-right: 0.5rem;
 
         x-checkbox {
             .unchecked {
