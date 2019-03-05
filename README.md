@@ -12,6 +12,14 @@ For persistence, there are a couple of server implementations in [flowy-servers]
 
 - **TODO: Multi-Device Sync**: Currently the sync will update a task with wherever the latest update comes from, which is not a great strategy for using the same storage on multiple devices.
 
+## LICENSES
+
+The project is under [BSD-3 Clause](/LICENSE)
+
+The checkbox is taken from the [material design icons](http://google.github.io/material-design-icons/), Apache 2.0 License.
+
+The button icons in the shortcuts bar for phone displays are taken from [the arrows collection in the noun project by Salvia Santos](https://thenounproject.com/Salvinorina-a/collection/arrows/), Creative Commons License.
+
 ## Hacking
 
 ```
