@@ -1,6 +1,7 @@
 x-controls {
     position: fixed;
-    width: 100%;
+    width: 100vw;
+    top: unset;
     bottom: 0;
     display: flex;
     box-sizing: border-box;
