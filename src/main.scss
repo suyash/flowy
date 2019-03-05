@@ -7,6 +7,10 @@
 
 html, body {
     width: 100%;
+
+    @media screen and (max-width: 576px) {
+        height: 100vh;
+    }
 }
 
 body {
@@ -25,15 +29,19 @@ main {
     position: relative;
 
     @media screen and (max-width: 576px) {
+        height: 100%;
+        overflow: auto;
         align-items: start;
     }
 
     &.withControls {
-        margin-bottom: 3rem;
+        padding-bottom: 3rem;
     }
 
     hr {
-        border: 0.1rem solid #27ae60;
+        border-width: 0 0 0.2rem 0;
+        border-style: solid;
+        border-color: #27ae60;
         width: 90%;
         margin-top: 1.5rem;
 
