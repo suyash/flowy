@@ -64,11 +64,7 @@ export default class Controls extends HTMLElement {
      */
     public setCurrentTask(task: Task): void {
         this.currentTask = task;
-        this.setIndentState(task.isShiftable());
-        this.setOutdentState(task.isUnshiftable());
-        this.setMoveDownState(task.isMovableDownwards());
-        this.setMoveUpState(task.isMovableUpwards());
-        this.setCheckboxState(true, !task.checked);
+        this.refresh();
     }
 
     /**
@@ -83,6 +79,19 @@ export default class Controls extends HTMLElement {
             this.setIndentState(false);
             this.setMoveDownState(false);
             this.setMoveUpState(false);
+        }
+    }
+
+    /**
+     * refresh
+     */
+    private refresh = (): void => {
+        if (this.currentTask) {
+            this.setIndentState(this.currentTask.isShiftable());
+            this.setOutdentState(this.currentTask.isUnshiftable());
+            this.setMoveDownState(this.currentTask.isMovableDownwards());
+            this.setMoveUpState(this.currentTask.isMovableUpwards());
+            this.setCheckboxState(true, !this.currentTask.checked);
         }
     }
 
@@ -153,6 +162,7 @@ export default class Controls extends HTMLElement {
         e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.shift();
+            this.refresh();
         }
     }
 
@@ -164,6 +174,7 @@ export default class Controls extends HTMLElement {
         e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.unshift();
+            this.refresh();
         }
     }
 
@@ -175,6 +186,7 @@ export default class Controls extends HTMLElement {
         e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.moveUp();
+            this.refresh();
         }
     }
 
@@ -186,6 +198,7 @@ export default class Controls extends HTMLElement {
         e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.moveDown();
+            this.refresh();
         }
     }
 
@@ -197,7 +210,7 @@ export default class Controls extends HTMLElement {
         e.preventDefault();
         if (this.currentTask) {
             await this.currentTask.toggleChecked();
-            this.toggleCheckCheckbox.checked = !this.toggleCheckCheckbox.checked;
+            this.refresh();
         }
     }
 }
