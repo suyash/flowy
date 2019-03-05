@@ -28,6 +28,7 @@ x-controls {
         justify-content: center;
         pointer-events: none;
         cursor: default;
+        max-width: 4rem;
 
         &.active {
             pointer-events: all;
@@ -37,17 +38,14 @@ x-controls {
 
     #outdent {
         svg {
-            width: 2rem;
-            margin: 0.45rem 1rem 0 1rem;
-
-            path {
+            g {
                 fill: #aaaaaa;
             }
         }
 
         &.active {
             svg {
-                path {
+                g {
                     fill: #222;
                 }
             }
@@ -56,17 +54,14 @@ x-controls {
 
     #indent {
         svg {
-            width: 2rem;
-            margin: 0.45rem 1rem 0 1rem;
-
-            path {
+            g {
                 fill: #aaaaaa;
             }
         }
 
         &.active {
             svg {
-                path {
+                g {
                     fill: #222;
                 }
             }
@@ -74,7 +69,7 @@ x-controls {
     }
 
     #toggleCheck {
-        margin-top: 0.5rem;
+        margin-top: 0.7rem;
         margin-right: 0.5rem;
 
         x-checkbox {
