@@ -4,6 +4,7 @@ const PRECACHE_URLS: string[] = [
     "./",
     "./index.css",
     "./index.js",
+    "./assets/favicon.png",
 ];
 
 self.addEventListener("install", (event: any): void => {
