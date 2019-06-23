@@ -4,9 +4,10 @@
   "author": "Suyash <suyash93@protonmail.com>",
   "license": "BSD 3-Clause",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && yarn build:assets",
+    "build:assets": "cp -r src/assets lib/assets",
     "build:html:prod": "html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true src/index.html > lib/index.html",
-    "build:prod": "rm -rf lib && NODE_ENV=\"production\" rollup -c && npm run build:html:prod",
+    "build:prod": "rm -rf lib && NODE_ENV=\"production\" rollup -c && yarn build:html:prod && yarn build:assets",
     "clean": "rm -rf lib",
     "lint": "tslint -p . --fix",
     "start": "serve lib -p 3000",
