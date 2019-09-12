@@ -28,7 +28,7 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-terser": "^4.0.4",
-    "rollup-plugin-typescript2": "^0.19.3",
+    "rollup-plugin-typescript2": "^0.24.1",
     "serve": "^10.1.2",
     "tslint": "^5.13.1",
     "typescript": "^3.3.3333"
