@@ -619,7 +619,11 @@ export default class Task extends HTMLElement {
      */
 
     private getCursorPosition = (): number => {
-        const selection: Selection = window.getSelection();
+        const selection: Selection | null = window.getSelection();
+        if (!selection) {
+            return 0;
+        }
+
         if (selection.rangeCount) {
             const range: Range = selection.getRangeAt(0);
             if (range.commonAncestorContainer.parentNode === this.tasktext) {
@@ -639,7 +643,11 @@ export default class Task extends HTMLElement {
         range.setStart(this.tasktext.childNodes[0], pos);
         range.collapse(true);
 
-        const sel: Selection = window.getSelection();
+        const sel: Selection | null = window.getSelection();
+        if (!sel) {
+            return;
+        }
+
         sel.removeAllRanges();
         sel.addRange(range);
     }
